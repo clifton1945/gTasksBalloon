@@ -1,0 +1,39 @@
+#################
+## jetBrains
+
+.idea/*
+apiclient/*
+httplib2/*
+oauth2client/*
+uritemplate/*
+deprecated/*
+
+*.wp*
+*.pyc
+*.json
+
+*** file types
+*.dat
+*.txt
+
+*** changing to tasklist mode.
+src/task_model.py
+test/task_model_TESTS.py
+
+*** changing to NEW_MODEL without the full TaskClass
+src/task_class.py
+tests/task_class_TESTS.py
+
+*** root
+__init__.py
+server
+README.html
+
+*** src/
+src/myTestDB
+src/myTaskDB
+
+*** tests/
+tests/myTestDB
+tests/x_TESTS.py
+tests/ALMA5.RTF
