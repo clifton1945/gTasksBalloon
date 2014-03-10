@@ -1,0 +1,140 @@
+RTDN  ReadTheDarnNotes  *: means still to do. x: done
+
+TODAY: 140306
+    FACETS are regular tasks in the FACETS tasklist.
+    tomorrow build a test that stresses the update_ttls with dirty data.
+    tomorrow decide how implement next_facet_rule.
+        compare due dates of same tags
+            figure out how tag.
+        sort into same outer facet
+    voiceEntry using VoiceNote WORKS
+        BUT voice recognition the car sticks
+
+### PLANS  #####################
+    ADD tasklists by some Category-Facet: done? this Week? sortedByFacet?
+    begin @Facets: to see NEXT_ Action summaries
+    DECIDE how to handle not doing stuff; where / how deal with not sone stuff.
+        1. keep rolling it back? how much?
+
+    ADD email alert
+    ADD accepting / creating Tasks via gMail
+    ADD some GIW aspect of seeing IDEAS and old/lowPriority everyone in a while.
+        e.g. IDEAS in own folder w/o a RelDateTime
+    ADD see tasks for week on Sundays
+    ADD Calendar for all FIXED DATE items;
+        and only use Tasks for RELATIVE DATES: more for prioritizing
+
+### PRINCIPLES ###################
+    See what you want / not everything when you want it.
+    Distinguish tween Absolute and Relative Time.
+        Absolute is on Calendar
+        Relative is on Tasks
+            Rel is for Priority
+            Rel indicated by modal verbals
+
+    Voice Entry - mobil platforms
+    Learn from history: the more hits / adjustments > closer rel time
+        If no adjustment keep rolling rel time forward.
+
+    different Views: Near, Week, NextFacet
+
+### NOTES ########################
+DESIGN AND TESTING:
+facets force dealing with persisting facets
+    Should I shelve / unshelve a facet dict?
+        retrieve it, modify it using facet_rules, shelve before leaving?
+        GIW
+    there is no othe place for it. DO I NEED it?
+        yes, otherwise can 't compare a current tag date to find the nearest.
+        and ?Q? DO I SHOW all near or just the one near?
+MVP design
+    Model: interface to Data. Any data use goes thru Model
+        modules: server.py
+        validation: date
+        convert task Resources to TaskClass input
+        server resource caller
+            getTasks()
+            patchServer()
+        shelving functions
+
+    Views:  GUI typically HTML
+        in my case all the GTask apps and widgets
+        GIWR: HTML
+
+    Presenter: intermediary, middle man
+        modules: maybe a presenter_class.py, task_class.py
+        typically handling user events
+            ?? what are my events ??
+            !! user request for different views:
+                ThisWeek, Today, FacetsSummary, etc
+            !! or time generated - daily - reports
+        business logic
+            presenter.update()
+            TaskClass with RULES
+
+LEARNING PYTHON NOTES:
+    # convert date to string
+    d = datetime(2014, 2, 10)
+    d_str = d.strftime('%Y-%m-%dT%H:%M:%S.%f')
+    print d_str
+    #  learn datetime change date for testing
+    d = datetime(2014, 02, 20, 8)
+    d_1 = d.replace(day=24)
+    print("d   {}\nd-1 {}\nd   {}\n".format(d, d_1, d))  # same a d not day=24
+    # how set now to 2 days before now
+    dy = d.day
+    d_2 = d.replace(day=dy - 2)
+    print('d_2 {}'.format(d_2))
+
+    API: PATCH
+    a_task = t.get(tasklist=TESTlist_id, task=TESTTask_id, fields="title,status, notes").execute()
+    then make some changes to the a_task
+    a_tsk['notes'] = 'this is a new note.'
+    cut = t.patch(tasklist=TESTlist_id, task=TESTTask_id, body=a_tsk,
+                      fields="notes").execute()
+
+    To request a partial response, use the fields request parameter to specify the fields you want returned.
+    You can use this parameter WITH ANY REQUEST THAT RETURNS RESPONSE DATA.
+
+NOTE ON hasattr OR in
+    hasattr(Object, str)
+    str in dict
+NOTE ON ITERATING
+    list: for one in many_list
+    dict: for one in many_dict.iter...items() | values() | keys()
+        : REFACT THIS x = [v[k] for k, v in dict.iteritems()][0]
+        : REFACT or gen notation () for generator but don't understand.
+
+Running
+=======
+
+You can run your starter application with:
+
+  python sample.py
+
+Please read sample.py carefully, it contains detailed information
+in the comments.
+
+Installation
+============
+
+The full source for the google-api-python-client library is included
+in this starter application, but the library has not been installed on your
+system. That means that this sample will run from within the unzipped
+directory, but from nowhere else.
+
+The easiest way to install the client library into your system is by running easy_install:
+
+  easy_install --upgrade google-api-python-client
+
+You might need to ADD a 'sudo' to the beginning of that command depending on your platform.
+If you don't have easy_install you can get it by installing the setuptools package.
+
+
+Documentation
+=============
+
+The documentation for the google-api-python-client library is avialable here:
+
+   https://developers.google.com/api-client-library/python/start/get_started
+
