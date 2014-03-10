@@ -18,7 +18,10 @@ deprecated/*
 
 *** changing to tasklist mode.
 src/task_model.py
-test/task_model_TESTS.py
+src/g Tasks APi*
+tests/task_model_TESTS.py
+
+src/bak.
 
 *** changing to NEW_MODEL without the full TaskClass
 src/task_class.py
@@ -27,6 +30,7 @@ tests/task_class_TESTS.py
 *** root
 __init__.py
 server
+myTaskDB
 README.html
 
 *** src/
