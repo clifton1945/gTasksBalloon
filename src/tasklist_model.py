@@ -38,7 +38,7 @@ def update_server():
 
 def get_server_tasklist_items():
     """
-    gets a tasklist_list_responce
+    gets a tasklist_list_response
         {
           "kind": "tasks#taskLists",
           "etag": string,
@@ -53,9 +53,9 @@ def get_server_tasklist_items():
     @rtype: list
     @return: a list of each tasklist_rsrc.
     """
-    tasklist_list_responce = GBL_SERVICE.tasklists().list().execute()  # predicate
+    tasklist_list_response = GBL_SERVICE.tasklists().list().execute()  # predicate
 
-    tasklist_rsrcs_list = [tl_r for tl_r in tasklist_list_responce['items']]
+    tasklist_rsrcs_list = [tl_r for tl_r in tasklist_list_response['items']]
     return tasklist_rsrcs_list
 
 
@@ -63,7 +63,11 @@ def get_server_tl_task_items_in_(tls_list):
     # for each taskl resource in each tasklist,
     # attr:
     # append the tasklist tasks list to areturn an updated task.
-    # REFACT GIW: STUB
+    def tasks_list_request(tl_id):
+        return GBL_SERVICE.tasklists().list(tl_id).execute
+    tasks_list_response = GBL_SERVICE.tasklists().list().execute
+    x =[tasks_list_request(tl['id']) for tl in tls_list]
+    # TODO  complete x???
     return tls_list
 
 
