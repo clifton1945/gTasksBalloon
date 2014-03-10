@@ -4,7 +4,7 @@ NOTE: 140205 mostly changed this to be a module.
 coding: utf-8
 Command-line skeleton application for Tasks API.
 Usage:-
-  $ python seerver.py
+  $ python server.py
 
 You can also get help on all the command-line flags the program understands
 by running:

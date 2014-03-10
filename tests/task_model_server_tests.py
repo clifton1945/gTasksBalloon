@@ -17,7 +17,6 @@ class TaskModelUpdatingTEST(unittest.TestCase):
         self.trial_testtask_list = tl = [ttl for ttl in ttll
                                          if 'title' in ttl['task']
                                          and ttl['task']['title'] == 'TestTask']
-
         ### test datetimes
         self.now_dt = n = datetime.datetime.now()
         self.now_str = n.strftime('%Y-%m-%dT%H:%M:%S.%f')
