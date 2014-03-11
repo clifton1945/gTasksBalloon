@@ -60,14 +60,23 @@ def get_server_tasklist_items():
 
 
 def get_server_tl_task_items_in_(tls_list):
-    # for each taskl resource in each tasklist,
-    # attr:
-    # append the tasklist tasks list to areturn an updated task.
+    """
+
+    gets a list of tasks- response - for each tasklist.
+       {
+          "kind": "tasks#tasks",
+          "etag": string,
+          "nextPageToken": string,
+          "items": [
+            tasks Resource
+            ]
+        }
+
+    """
     def tasks_list_request(tl_id):
         return GBL_SERVICE.tasklists().list(tl_id).execute
-    tasks_list_response = GBL_SERVICE.tasklists().list().execute
-    x =[tasks_list_request(tl['id']) for tl in tls_list]
-    # TODO  complete x???
+    x = [tasks_list_request(tl['id']) for tl in tls_list]
+    tasks_list_responses = x
     return tls_list
 
 
