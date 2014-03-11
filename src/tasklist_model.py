@@ -18,8 +18,8 @@ GBL_SERVICE = server.get_service()
 
  ### MAIN PREDICATE ###
 def update_server():
-    tasklist_rsrcs_list = tl_r_l = get_server_tasklist_items()
-    tl_rx_l = get_server_tl_task_items_in_(tl_r_l)  # tasklist dict now xtended: lotasks' key.
+    tasklist_rsrcs_list = get_server_tasklist_items()
+    tl_rx_l = get_server_tl_task_items_in_(tasklist_rsrcs_list)  # tasklist dict now xtended: lotasks' key.
     tl_mod_l = update_tl_tasks_in_(tl_rx_l)
     tl_rx_l = update_server_from_(tl_mod_l)
     return tl_rx_l
@@ -93,13 +93,19 @@ def update_server_from_(modfd_tl_list):
     @return modfd_tl_list: list of tasks that have been modified e.g. made visible
     NOTE: extended k/v are not presented to GBL_SERVICE...execute()
     """
-    for tl_rsrc in modfd_tl_list:
+    returned_tl_list = []
+    for tl_xdict in modfd_tl_list:
         # only present api standard resources.
-        if 'lotasks' in tl_rsrc:
-            t_rsrcs_list = tl_rsrc['lotasks']
-            for t_rsrc in t_rsrcs_list:
-                update_server_tasks_with_(t_rsrc, t_rsrc)
-    return modfd_tl_list  # TODO decide best return
+        if 'lotasks' in tl_xdict:
+            ret_task_list = []
+            for t_rsrc in tl_xdict['lotasks']:
+                ret_t_rsrc = update_server_tasks_with_(tl_xdict, t_rsrc)
+                ret_task_list.append(ret_t_rsrc)
+                   #  now rebuild tl_xdict
+            tl_xdict['lotasks'] = ret_task_list
+            returned_tl_list.append(tl_xdict)
+        # the implied else just returns an empty returned_tl_list.
+    return returned_tl_list
 
 
 def update_server_tasks_with_(tl_rsrc, task_rsrc):
@@ -152,8 +158,9 @@ def update_server_tasks_with_(tl_rsrc, task_rsrc):
         return {}
 
 
+############## DEPRECATED ###########
 
-  ############## DEPRECATED ###########
+
 def update_tls_from_(tl_rsrc_dict):
     # update each tasklist in it's own scope.
     #i.e. justthe tasks in that tasklist.
