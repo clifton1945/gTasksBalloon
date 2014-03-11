@@ -95,31 +95,65 @@ def update_server_from_(modfd_tl_list):
     """
     for tl_rsrc in modfd_tl_list:
         # only present api standard resources.
-        tl_rsrc = tl_rsrc['tasklist']
-        t_rsrc = tl_rsrc['task']
-        try:
-            new_t_rsrc = GBL_SERVICE.tasks().update(
-                tasklist=tl_rsrc['id'],
-                task=t_rsrc['id'],
-                body=t_rsrc
-            ).execute()
-
-        except Exception as ex:
-            print 'UPDATE FAILED: tlTitle:{} tTitle:{}\n...tl:{}'\
-                .format(tl_rsrc['title'], t_rsrc['title'], t_rsrc, tl_rsrc)
-            template = "An exception of type {0} occured. Arguments:\n{1!r}"
-            message = template.format(type(ex).__name__, ex.args)
-            print message
-
+        if 'lotasks' in tl_rsrc:
+            t_rsrcs_list = tl_rsrc['lotasks']
+            for t_rsrc in t_rsrcs_list:
+                update_server_tasks_with_(t_rsrc, t_rsrc)
     return modfd_tl_list  # TODO decide best return
 
-    #     # rebuild a new tl_rsrc
-    #     new_tl_rsrc = {"task": new_t_rsrc, "tasklist": tl_rsrc}
-    #     tl_rsrcs_dict[t_rsrc['id']] = new_tl_rsrc
-    # return tl_rsrcs_dict
+
+def update_server_tasks_with_(tl_rsrc, task_rsrc):
+    """
+
+    @param tl_rsrc: dict
+    @type tl_rsrc: dict
+    @param task_rsrc: dict
+    @type task_rsrc: dict
+
+    @rtype: dict
+    server returns a task rsrc -> {
+      "kind": "tasks#task",
+      "id": string,
+      "etag": etag,
+      "title": string,
+      "updated": datetime,
+      "selfLink": string,
+      "parent": string,
+      "position": string,
+      "notes": string,
+      "status": string,
+      "due": datetime,
+      "completed": datetime,
+      "deleted": boolean,
+      "hidden": boolean,
+      "links": [
+        {
+          "type": string,
+          "description": string,
+          "link": string
+        }
+      ]
+    }
+    """
+    try:
+        new_task_rsrc = GBL_SERVICE.tasks().update(
+            tasklist=tl_rsrc['id'],
+            task=task_rsrc['id'],
+            body=task_rsrc
+        ).execute()  # MAIN predicate. only present api standard resources
+        return new_task_rsrc
+
+    except Exception as ex:
+        print 'UPDATE FAILED: tlTitle:{} tTitle:{}\n...task:{}'\
+            .format(tl_rsrc['title'], task_rsrc['title'], task_rsrc)
+        template = "An exception of type {0} occured. Arguments:\n{1!r}"
+        message = template.format(type(ex).__name__, ex.args)
+        print message
+        return {}
 
 
-############## DEPRECATED ###########
+
+  ############## DEPRECATED ###########
 def update_tls_from_(tl_rsrc_dict):
     # update each tasklist in it's own scope.
     #i.e. justthe tasks in that tasklist.
