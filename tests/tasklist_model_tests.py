@@ -1,7 +1,6 @@
-__author__ = 'CLIF'
 
 import unittest
-import tasklist_model as tl_m
+import src.tasklist_model as tl_m
 
 
 class TasklistMainPredicate(unittest.TestCase):

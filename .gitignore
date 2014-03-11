@@ -28,7 +28,6 @@ src/task_class.py
 tests/task_class_TESTS.py
 
 *** root
-__init__.py
 server
 myTaskDB
 README.html

@@ -2,7 +2,6 @@
 #   '3/6/14'/'12:13 PM'
 
 from datetime import datetime
-import task_model as model
 import shelve
 
  ### GLOBAL DEFAULT ####################
