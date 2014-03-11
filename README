@@ -39,6 +39,14 @@ TODAY: 140306
     different Views: Near, Week, NextFacet
 
 ### NOTES ########################
+NAMING ######################
+#  naming for ~ as  t: task, tl: tasklist, ttl: tasklist_task, f: facet
+#  for example using t as ~:
+#   ~_r:          t_rsrc          task api resource
+#   ~_r_l:        t_rsrc_lst      task api resource items
+#   ~_rx:         t_rsrc_xt       task api resource extended
+#   ~_rx_l:       t_rsrc_xt_lst   task api resource extended items
+
 DESIGN AND TESTING:
 facets force dealing with persisting facets
     Should I shelve / unshelve a facet dict?
