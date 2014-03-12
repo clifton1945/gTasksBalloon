@@ -1,4 +1,24 @@
 RTDN  ReadTheDarnNotes  *: means still to do. x: done
+130312  DESIGN
+update_server()
+    # where tasklist dict xtended with my_tasks_list
+
+     tls_list_rspns = get server tls_list()
+     shelve set tls_list in bak(tls_list_rspns)
+
+     tls_x_mod_list = apply_rules_to_(tls_list_rspns)
+        for each tl in tls_list:
+            get
+            add my_ts_list to each tls in (tls_list_rspns)
+            apply_rules_to_each_tlx in (tls_x_list)
+
+     ts_update_list_rspns = ts_update_server_in_(tlx_mod_list)
+     shelve_modified_ts(ts_update_list_rspns)
+
+
+
+
+
 
 TODAY: 140306
     FACETS are regular tasks in the FACETS tasklist.

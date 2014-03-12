@@ -22,6 +22,15 @@ def update_server():
     tl_rx_l = get_server_tl_task_items_in_(tasklist_rsrcs_list)  # tasklist dict now xtended: lotasks' key.
     tl_mod_l = update_tl_tasks_in_(tl_rx_l)
     tl_rx_l = update_server_from_(tl_mod_l)
+
+    # for a while I'll print some of this stuff.
+    template = "  server->{}:tasklists/ {}:tasks\n" \
+               "modified->{}:tasklists/ {}:tasks\n"
+    print template.format(len(tl_rx_l),
+                          sum([len(tlt['lotasks']) for tlt in tl_rx_l]),
+                          len(tl_mod_l),
+                          sum([len(tlt['lotasks']) for tlt in tl_mod_l])
+                            )
     return tl_rx_l
 
 
@@ -78,8 +87,14 @@ def get_server_tl_task_items_in_(tls_list):
 
 
 def update_tl_tasks_in_(tls_list):
-    # for each task resource in each tasklist, return an updated task.
-    # REFACT GIW: STUB
+    # return any updated tasks.
+    lomods = []
+    for tl in tls_list:
+        for t in tl['lotasks']:
+            if t['title'][:5] == 'TRIAL':  # TODO STUB filter on this name
+                lomods.append(t)
+                tl['lotasks'] = lomods
+
     return tls_list
 
 
@@ -224,3 +239,8 @@ def near_due_rule(due, now):
     after_near = -2
     tdel = due - now  # days to go IS POSITIVE
     return after_near <= tdel.days <= before_near
+
+
+if __name__ == '__main__':
+    update_server()  # FILL Shelve with current state of ALL TASKS.
+    # get_and_shelve_all_ttls()  # this is used for testing.
