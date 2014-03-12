@@ -45,7 +45,7 @@ def update_bak():
     # STUB
     return []
 
-#### MAIN PREDICATE FUNCTIONS
+ #### MAIN PREDICATE FUNCTIONS
 
 def serve_data_():
     """
@@ -100,6 +100,7 @@ def update_data_(alist):
     return []
 
 
+# noinspection PyClassHasNoInit
 class HideFunctions():
 
     def update_tl_tasks_in_(tl_t_list):
@@ -137,7 +138,6 @@ class HideFunctions():
                 returned_tl_list.append(tl_xdict)
                 # the implied else just returns an empty returned_tl_list.
         return returned_tl_list
-
 
     def update_server_tasks_with_(tl_rsrc, task_rsrc):
         """
@@ -191,6 +191,8 @@ class HideFunctions():
 
         ############## DEPRECATED ###########
 
+
+# noinspection PyClassHasNoInit
 class deprecated():
 
     def update_tls_from_(tl_rsrc_dict):
@@ -259,4 +261,5 @@ class deprecated():
 
 
 if __name__ == '__main__':
-
+    pass
+    # add a some super test or print function here.

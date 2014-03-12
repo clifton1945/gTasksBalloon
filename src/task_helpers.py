@@ -5,7 +5,7 @@ from datetime import datetime
 import shelve
 
  ### GLOBAL DEFAULT ####################
-DB_FILE_NAME = 'C:/GitHub/tasks-cmd-line-balloons/myTaskDB'
+DB_FILE_NAME = 'C:/GitHub/gTasksBalloon/myTaskDB'
 DB_ROOT_NAME = 'MyTasks'
 FILTER_TRIALS = 'TRIALS'
 FILTER_FACETS = 'FACETS'
