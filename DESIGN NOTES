@@ -1,0 +1,58 @@
+
+backup_data()
+trial_data()  # for testing, doesn’t update_server
+update_shelve()
+
+
+update_tasks() ->`
+“”” applies update rules for all task.
+	does not update the server.
+“””
+get_data_from_server()
+“”” get and combine tasklist responses and tasks data from server
+     return a list of tuples: a  tl_resource with it’s  associated list of task resources.
+”””
+	 tlt_tup_list = []
+
+	for a_tasklist in serve_tasklists_list():
+		for a_tasks_list  in serve_tasks_list_(a_tasklist )
+			tlt_tup = (a_tasklist, a_tasks_list)
+	return tlt_tup_list
+
+shelve_data(data_list) ->
+“”” @param tuple: tl_rsrc, t_rsrcs_list
+@return data saved as a tuple.”””
+
+update_data(data_list) ->
+ modifies tlt with update_rules which r a function of (tasklist_ type.
+returns)
+	NOTE: big choice: one pass thru data OR multiple passes  functional  style?
+		There will never be so much data that client or server logic will control;
+		The bottlenecks will be get and set.
+	SO let’s use functional style for the logic code
+“””
+	apply_rule_near_due([tl for tl, t_list in data_list if tl[‘title’] == “TASKS”)
+	apply_rule_next_facet(tl for ti, t_list in data_list if tl[‘title’] == ‘FACETS’)
+	# ADD rules for TRIALS, IDEAS, GOALS, etc.
+
+
+update_server(data_list)  ->
+“”” server only gets modified data.”””
+	update_tasks()
+	update_server()
+
+
+
+extend_tls_ts_
+	tltx = new TasklistTasksXtended()
+
+	tls_list = server.get_tls_list()
+	for tl in tls_list :
+		tltx.tl = tl
+		tltx.tasks = server.get_tl_ts_list(tl)
+
+shelve_tls_ts_from_(list)
+update_tls_ts_xs_from_(list)
+	for a_tl_t_c_object in list:
+		create_tl_t_x_object
+update_server_from_(list)
