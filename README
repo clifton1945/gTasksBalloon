@@ -1,5 +1,5 @@
 RTDN  ReadTheDarnNotes  *: means still to do. x: done
-130312  DESIGN
+130312  DESIGN change  vder
 update_server()
     # where tasklist dict xtended with my_tasks_list
 

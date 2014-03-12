@@ -28,15 +28,18 @@ src/task_class.py
 tests/task_class_TESTS.py
 
 *** root
+__init__.py
 server
 myTaskDB
 README.html
 
 *** src/
+__init__.py
 src/myTestDB
 src/myTaskDB
 
 *** tests/
+__init__.py
 tests/myTestDB
 tests/x_TESTS.py
 tests/ALMA5.RTF

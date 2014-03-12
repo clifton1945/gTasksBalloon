@@ -1,7 +1,7 @@
-# 'tasklist_model' in 'tasks-cmd-line-sample'
-#   '3/10/14'
+# 'tasklist_model' in 'gTasksBalloon'
+# 3/12/14
 #
-# version 4.1 GIW  tasklist_style meaning logic is a function of the tasklist
+# version 4.5 GIW  tasklist_style meaning logic is a function of the tasklist
 # Model:
 #   logic and rules operations for updating tasks.
 #       operations are now a function of the tasklist.
