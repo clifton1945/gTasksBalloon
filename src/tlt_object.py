@@ -18,14 +18,22 @@ import task_helpers as h
 import server
 
 ### GLOBAL
-GBL_SERVICE = server.get_service()
+GBL_SERVICE = server.get_service()  #REFACT just use h.functions
 
 
- ### MAIN PREDICATES ###
+ #### MAIN PREDICATES ###
 def update_shelve():
     ret = h.shelve_to_db(serve_data_())  # REFACT doc in h.shelve data names
     assert isinstance(ret, list)
     return ret
+
+
+def update_pilot():
+    tlt_list = unshelve_pilot_data()
+    assert isinstance(tlt_list, list)
+    tlt_list = update_data_(tlt_list)
+    assert isinstance(tlt_list, list)
+    return tlt_list
 
 
 def update_server_():
@@ -37,15 +45,9 @@ def update_bak():
     # STUB
     return []
 
+#### MAIN PREDICATE FUNCTIONS
 
-def update_pilot():
-    ret = h.unshelve_from_db()  # REFACT doc in h.unshelve data names    return []
-    assert isinstance(ret, list)
-
-    #### MAIN PREDICATE FUNCTIONS
-
-
-def serve_data_(alist):
+def serve_data_():
     """
     gets a list of tasklist responses
     response ->
@@ -74,23 +76,31 @@ def serve_data_(alist):
     @rtype: list
     @return tlt_list: - a list of tuples ( tasklist, list of tasks)
     """
-
     tlt_list = []
     list_o_tasklists = GBL_SERVICE.tasklists().list().execute()  # predicate
     for a_tasklist in list_o_tasklists:
         list_o_tasks = GBL_SERVICE.tasks().list(tasklist=a_tasklist['id']).execute()
-    return a_tasklist, list_o_tasks
+        tlt_list.append((a_tasklist, list_o_tasks))
+    return tlt_list
 
 
-    def extend_data_(alist):
-        # STUB
-        return []
+def unshelve_pilot_data():
+    ret = h.unshelve_from_db()  # REFACT doc in h.unshelve data names    return []
+    assert isinstance(ret, list)
+    return ret
 
 
-    def update_data_(alist):
-        # STUB
-        return []
+def extend_data_(alist):
+    # STUB
+    return []
 
+
+def update_data_(alist):
+    # STUB
+    return []
+
+
+class HideFunctions():
 
     def update_tl_tasks_in_(tl_t_list):
         # return any updated tasks.
@@ -179,8 +189,9 @@ def serve_data_(alist):
             return {}
 
 
-    ############## DEPRECATED ###########
+        ############## DEPRECATED ###########
 
+class deprecated():
 
     def update_tls_from_(tl_rsrc_dict):
         # update each tasklist in it's own scope.
@@ -247,6 +258,5 @@ def serve_data_(alist):
         return after_near <= tdel.days <= before_near
 
 
-    if __name__ == '__main__':
-        update_server()  # FILL Shelve with current state of ALL TASKS.
-        # get_and_shelve_all_ttls()  # this is used for testing.
+if __name__ == '__main__':
+
