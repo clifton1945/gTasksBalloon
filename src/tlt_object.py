@@ -45,11 +45,13 @@ def update_bak():
     # STUB
     return []
 
+
  #### MAIN PREDICATE FUNCTIONS
+
 
 def serve_data_():
     """
-    gets a list of tasklist responses
+    provides a list of tuples( tasklist resources, list of task resources FOR THIS tasklist)
     response ->
         {
           "kind": "tasks#taskLists",
@@ -74,18 +76,37 @@ def serve_data_():
     }
 
     @rtype: list
-    @return tlt_list: - a list of tuples ( tasklist, list of tasks)
+    @return tlt_list: - a list of tuples
+     ( "update_shelve: dict,
+       "list_of_tasks": list
+       )
     """
     tlt_list = []
     list_o_tasklists = GBL_SERVICE.tasklists().list().execute()  # predicate
-    for a_tasklist in list_o_tasklists:
-        list_o_tasks = GBL_SERVICE.tasks().list(tasklist=a_tasklist['id']).execute()
-        tlt_list.append((a_tasklist, list_o_tasks))
+    if 'items' in list_o_tasklists:
+        for a_tasklist in list_o_tasklists['items']:
+            list_o_tasks = GBL_SERVICE.tasks().list(tasklist=a_tasklist['id']).execute()
+            if 'items' in list_o_tasks:
+                tlt_list.append((a_tasklist, list_o_tasks['items']))
+    return tlt_list
+
+
+def serve_pilot_data():
+    tlt_list = []
+    pilot_id = "MTEzMzE3MDg1MTgzNjAxMjA2MzM6MTA4MzM1MTE1ODow"
+    list_o_tasklists = GBL_SERVICE.tasklists().get(tasklist=pilot_id).execute()  # predicate
+
+    if 'items' in list_o_tasklists:
+        for a_tasklist in list_o_tasklists['items']:
+            list_o_tasks = GBL_SERVICE.tasks().list(tasklist=a_tasklist['id']).execute()
+            if 'items' in list_o_tasks:
+                tlt_list.append((a_tasklist, list_o_tasks['items']))
     return tlt_list
 
 
 def unshelve_pilot_data():
-    ret = h.unshelve_from_db()  # REFACT doc in h.unshelve data names    return []
+    ret = h.unshelve_from_db()
+
     assert isinstance(ret, list)
     return ret
 
