@@ -105,8 +105,8 @@ def update_data_(tlt_data_list):
 # noinspection PyClassHasNoInit
 class Pilot():
 
-    DB_FILE_NAME = 'tests.myPilotDB'
-    DB_ROOT_NAME = 'MyPilotTLT'
+    DB_FILE_NAME = 'myPilotDB'
+    DB_ROOT_NAME = 'MyPilotRoot'
     FILTER_TRIALS = 'PILOTS'
     FILTER_FACETS = 'FACETS'
 
@@ -155,8 +155,9 @@ class Pilot():
 
     @staticmethod
     def update_pilot_shelve():
-        tlt_obj_list = Pilot.unshelve_pilot_data()
+        tlt_obj_list = Pilot.serve_pilot_data()
         Pilot.shelve_pilot_data(tlt_obj_list)
+        return tlt_obj_list
 
 
     @staticmethod
@@ -178,7 +179,8 @@ class Pilot():
         @rtype: list
         """
         ret = h.unshelve_from_db(Pilot.DB_FILE_NAME, Pilot.DB_ROOT_NAME)
-        assert isinstance(ret, list)
+        assert isinstance(ret, list)  #
+        return ret
 
 
 # noinspection PyClassHasNoInit
@@ -186,7 +188,7 @@ class Rules():
     @staticmethod
     def update_tls_from_(tl_rsrc_dict):
         # update each tasklist in it's own scope.
-        #i.e. justthe tasks in that tasklist.
+        #i.e. just the tasks in that tasklist.
         # tl_r_d could be empty.
         if tl_rsrc_dict:
             return tl_rsrc_dict
