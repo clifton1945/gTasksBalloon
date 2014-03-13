@@ -2,6 +2,7 @@
 #   '3/12/14'/'3:26 PM'
 #
 # version 4.5 GIW  tasklist_style meaning logic is a function of the tasklist
+# TODO UAE dict instead of tuple unless 2.7 has named tuples
 # Model:
 #   logic and rules operations for updating tasks.
 #       operations are now a function of the tasklist.
@@ -105,10 +106,14 @@ def serve_pilot_data():
 
 
 def unshelve_pilot_data():
+    """
+    unshelves data, and
+    @return:  a list with just tasklist 'PILOTS' objects.
+    @rtype: list
+    """
     ret = h.unshelve_from_db()
-
     assert isinstance(ret, list)
-    return ret
+    return [(tl_rsrc, list_o_tasks) for tl_rsrc, list_o_tasks in ret if tl_rsrc['title'] == 'PILOTS']
 
 
 def extend_data_(alist):
@@ -116,25 +121,32 @@ def extend_data_(alist):
     return []
 
 
-def update_data_(alist):
-    # STUB
-    return []
+def update_data_(data_list):
+    """
+     modifies tlt with update_rules which r a function of (tasklist_ type.
+     returns)
+        NOTE: big choice: one pass thru data OR multiple passes  functional  style?
+            There will never be so much data that client or server logic will control;
+            The bottlenecks will be get and set.
+        SO let’s use functional style for the logic code
+    """
+    # ADD rules for TRIALS, IDEAS, GOALS, etc.
+    def apply_rule(tasklist_obj): return tasklist_obj
+
+    apply_rule_near_due = apply_rule
+    apply_rule_next_facet = apply_rule
+
+    mod_data_list = []
+    for tlt in data_list:
+        mod_data_list.extend([apply_rule_near_due(t_list) for tl_dict, t_list
+                              in tlt if tl_dict['title'] == 'TASKS'])
+        mod_data_list.extend([apply_rule_next_facet(t_list) for tl_dict, t_list
+                              in tlt if tl_dict['title'] == 'PILOTS'])
+    return mod_data_list
 
 
 # noinspection PyClassHasNoInit
 class HideFunctions():
-
-    def update_tl_tasks_in_(tl_t_list):
-        # return any updated tasks.
-        lomods = []
-        for tl in tls_list:
-            for t in tl['lotasks']:
-                if t['title'][:5] == 'TRIAL':  # TODO STUB filter on this name
-                    lomods.append(t)
-                    tl['lotasks'] = lomods
-
-        return tls_list
-
 
     def update_server_from_(modfd_tl_list):
         """
@@ -282,5 +294,5 @@ class deprecated():
 
 
 if __name__ == '__main__':
-    pass
+    update_shelve()
     # add a some super test or print function here.
