@@ -15,6 +15,7 @@
 
 
 from datetime import datetime
+import _bsddb
 import task_helpers as h
 import server
 
@@ -29,20 +30,7 @@ def update_shelve():
     return ret
 
 
-def update_pilot():
-    tlt_list = unshelve_pilot_data()
-    assert isinstance(tlt_list, list)
-    tlt_list = update_data_(tlt_list)
-    assert isinstance(tlt_list, list)
-    return tlt_list
-
-
 def update_server_():
-    # STUB
-    return []
-
-
-def update_bak():
     # STUB
     return []
 
@@ -92,53 +80,105 @@ def serve_data_():
     return tlt_list
 
 
-def serve_pilot_data():
-    tlt_list = []
-    pilot_id = "MTEzMzE3MDg1MTgzNjAxMjA2MzM6MTA4MzM1MTE1ODow"
-    list_o_tasklists = GBL_SERVICE.tasklists().get(tasklist=pilot_id).execute()  # predicate
-
-    if 'items' in list_o_tasklists:
-        for a_tasklist in list_o_tasklists['items']:
-            list_o_tasks = GBL_SERVICE.tasks().list(tasklist=a_tasklist['id']).execute()
-            if 'items' in list_o_tasks:
-                tlt_list.append((a_tasklist, list_o_tasks['items']))
-    return tlt_list
-
-
-def unshelve_pilot_data():
+def update_data_(tlt_data_list):
     """
-    unshelves data, and
-    @return:  a list with just tasklist 'PILOTS' objects.
-    @rtype: list
-    """
-    ret = h.unshelve_from_db()
-    assert isinstance(ret, list)
-    return [(tl_rsrc, list_o_tasks) for tl_rsrc, list_o_tasks in ret if tl_rsrc['title'] == 'PILOTS']
-
-
-def extend_data_(alist):
-    # STUB
-    return []
-
-
-def update_data_(data_list):
-    """
-     modifies tlt with update_rules which r a function of (tasklist_ type.
-     returns)
+     modifies each tlt with update_rules which are a function of (tasklist_ type).
+     returns a list of just the modified tlts.
     """
     # ADD rules for TRIALS, IDEAS, GOALS, etc.
-    mod_data_list = []
-    for tlt_tup in data_list:
+    modified_tasks_list = []
+    modified_tlt_data_list = []
+    for tlt_tup in tlt_data_list:
         tl_dict, t_list = tlt_tup  # unpack tlt_tup tuple
-        if tl_dict['title'] == 'PILOTS':
-            for t in t_list:
-                ret = Rules.apply_rule_near_due(t)
+        # triage tasklist types for different update rules.
+        is_modified = False
+        for t in t_list:
+            t, is_modified = Rules.apply_rule_near_due(t)
+            if is_modified:  # add this task_rsrc to list of tasks
+                modified_tasks_list.extend(t)
+        tlt_tup = tl_dict, modified_tasks_list  # re build the tlt tuple
+        if is_modified: # append it to modified_tlt_data_list
+            modified_tlt_data_list.extend(tlt_tup)
+    return modified_tlt_data_list
 
-            mod_data_list.extend(ret)
 
-        # mod_data_list.extend([apply_rule_next_facet(t_list) for tl_dict, t_list
-        #                       in tlt_tup if tl_dict['title'] == 'PILOTS'])
-    return mod_data_list
+# noinspection PyClassHasNoInit
+class Pilot():
+
+    DB_FILE_NAME = 'tests.myPilotDB'
+    DB_ROOT_NAME = 'MyPilotTLT'
+    FILTER_TRIALS = 'PILOTS'
+    FILTER_FACETS = 'FACETS'
+
+    def __init__(self):
+        pass
+
+
+    @staticmethod
+    def update_pilot():
+        """
+        fundamentely a test tasklist. mocking production update_server()
+        """
+        tlt_list = Pilot.unshelve_pilot_data()
+        assert isinstance(tlt_list, list)
+        assert len(tlt_list) > 0
+        tlt_list = update_data_(tlt_list)
+        assert isinstance(tlt_list, list)
+        # tlt_list = Pilot.shelve_pilot(tlt_list)
+        # maybe print results
+        return tlt_list
+
+
+    @staticmethod
+    def serve_pilot_data():
+        """
+        gets, returns tasklist='PILOTS' tlt_obj
+        (tasklist rsrc: rsrc,
+         list of tasks rsrcs: list
+        )
+        """
+        tlt_obj_list = []
+        pilot_id = "MTEzMzE3MDg1MTgzNjAxMjA2MzM6MTA4MzM1MTE1ODow"
+        try:
+            tl_rsrc = GBL_SERVICE.tasklists().get(tasklist=pilot_id).execute()
+            t_rsrc_list = GBL_SERVICE.tasks().list(tasklist=pilot_id).execute()  # predicate
+        except Exception as ex:
+            template = "An exception of type {0} occured. Arguments:\n{1!r}"
+            message = template.format(type(ex).__name__, ex.args)
+            print "in [serve_pilot_data] ->" + message
+
+        if 'items' in t_rsrc_list:
+            tlt_obj = tl_rsrc, t_rsrc_list['items']
+            tlt_obj_list.append(tlt_obj)
+
+        return tlt_obj_list
+
+    @staticmethod
+    def update_pilot_shelve():
+        tlt_obj_list = Pilot.unshelve_pilot_data()
+        Pilot.shelve_pilot_data(tlt_obj_list)
+
+
+    @staticmethod
+    def shelve_pilot_data(tlt_obj_list):
+        """
+        unshelves data, and
+        @return:  a list with just tasklist 'PILOTS' objects.
+        @rtype: list
+        """
+        ret = h.shelve_to_db(tlt_obj_list, Pilot.DB_FILE_NAME, Pilot.DB_ROOT_NAME)
+        assert isinstance(ret, list)
+
+
+    @staticmethod
+    def unshelve_pilot_data():
+        """
+        unshelves data, and
+        @return:  a list with just tasklist 'PILOTS' objects.
+        @rtype: list
+        """
+        ret = h.unshelve_from_db(Pilot.DB_FILE_NAME, Pilot.DB_ROOT_NAME)
+        assert isinstance(ret, list)
 
 
 # noinspection PyClassHasNoInit

@@ -34,7 +34,7 @@ def update_server():
     return tl_rx_l
 
 
- #### MAIN PREDICATE FUNCITONS
+ #### MAIN PREDICATE FUNCTIONS
 
 
 def get_server_tasklist_items():
