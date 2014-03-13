@@ -19,7 +19,7 @@ import task_helpers as h
 import server
 
 ### GLOBAL
-GBL_SERVICE = server.get_service()  #REFACT just use h.functions
+GBL_SERVICE = server.get_service()  # REFACT just use h.functions
 
 
  #### MAIN PREDICATES ###
@@ -125,109 +125,25 @@ def update_data_(data_list):
     """
      modifies tlt with update_rules which r a function of (tasklist_ type.
      returns)
-        NOTE: big choice: one pass thru data OR multiple passes  functional  style?
-            There will never be so much data that client or server logic will control;
-            The bottlenecks will be get and set.
-        SO let’s use functional style for the logic code
     """
     # ADD rules for TRIALS, IDEAS, GOALS, etc.
-    def apply_rule(tasklist_obj): return tasklist_obj
-
-    apply_rule_near_due = apply_rule
-    apply_rule_next_facet = apply_rule
-
     mod_data_list = []
-    for tlt in data_list:
-        mod_data_list.extend([apply_rule_near_due(t_list) for tl_dict, t_list
-                              in tlt if tl_dict['title'] == 'TASKS'])
-        mod_data_list.extend([apply_rule_next_facet(t_list) for tl_dict, t_list
-                              in tlt if tl_dict['title'] == 'PILOTS'])
+    for tlt_tup in data_list:
+        tl_dict, t_list = tlt_tup  # unpack tlt_tup tuple
+        if tl_dict['title'] == 'PILOTS':
+            for t in t_list:
+                ret = Rules.apply_rule_near_due(t)
+
+            mod_data_list.extend(ret)
+
+        # mod_data_list.extend([apply_rule_next_facet(t_list) for tl_dict, t_list
+        #                       in tlt_tup if tl_dict['title'] == 'PILOTS'])
     return mod_data_list
 
 
 # noinspection PyClassHasNoInit
-class HideFunctions():
-
-    def update_server_from_(modfd_tl_list):
-        """
-        update server for each MODIFIED task_rsrc.
-
-        @type modfd_tl_list:  list
-        @param modfd_tl_list: list of tasks that have been modified e.g. made visible
-        @rtype: list
-        @return modfd_tl_list: list of tasks that have been modified e.g. made visible
-        NOTE: extended k/v are not presented to GBL_SERVICE...execute()
-        """
-        returned_tl_list = []
-        for tl_xdict in modfd_tl_list:
-            # only present api standard resources.
-            if 'lotasks' in tl_xdict:
-                ret_task_list = []
-                for t_rsrc in tl_xdict['lotasks']:
-                    ret_t_rsrc = update_server_tasks_with_(tl_xdict, t_rsrc)
-                    ret_task_list.append(ret_t_rsrc)
-                    #  now rebuild tl_xdict
-                tl_xdict['lotasks'] = ret_task_list
-                returned_tl_list.append(tl_xdict)
-                # the implied else just returns an empty returned_tl_list.
-        return returned_tl_list
-
-    def update_server_tasks_with_(tl_rsrc, task_rsrc):
-        """
-
-        @param tl_rsrc: dict
-        @type tl_rsrc: dict
-        @param task_rsrc: dict
-        @type task_rsrc: dict
-
-        @rtype: dict
-        server returns a task rsrc -> {
-          "kind": "tasks#task",
-          "id": string,
-          "etag": etag,
-          "title": string,
-          "updated": datetime,
-          "selfLink": string,
-          "parent": string,
-          "position": string,
-          "notes": string,
-          "status": string,
-          "due": datetime,
-          "completed": datetime,
-          "deleted": boolean,
-          "hidden": boolean,
-          "links": [
-            {
-              "type": string,
-              "description": string,
-              "link": string
-            }
-          ]
-        }
-        """
-        try:
-            new_task_rsrc = GBL_SERVICE.tasks().update(
-                tasklist=tl_rsrc['id'],
-                task=task_rsrc['id'],
-                body=task_rsrc
-            ).execute()  # MAIN predicate. only present api standard resources
-            return new_task_rsrc
-
-        except Exception as ex:
-            print 'UPDATE FAILED: tlTitle:{} tTitle:{}\n...task:{}' \
-                .format(tl_rsrc['title'], task_rsrc['title'], task_rsrc)
-            template = "An exception of type {0} occured. Arguments:\n{1!r}"
-            message = template.format(type(ex).__name__, ex.args)
-            print message
-            return {}
-
-
-        ############## DEPRECATED ###########
-
-
-# noinspection PyClassHasNoInit
-class deprecated():
-
+class Rules():
+    @staticmethod
     def update_tls_from_(tl_rsrc_dict):
         # update each tasklist in it's own scope.
         #i.e. justthe tasks in that tasklist.
@@ -241,42 +157,47 @@ class deprecated():
 
         # PREDICATE: triage tasks for updating
         if tl['title'] == h.FILTER_FACETS:
-            tl_xt = apply_rule_near_due(tl_xt)
+            tl_xt = tl_rsrc_dict.apply_rule_near_due(tl_xt)
             # tl_xt = update_tl_facets(tl_xt)
         else:  # update all the rest of the tasklists.
-            tl_xt = apply_rule_near_due(tl_xt)
+            tl_xt = tl_rsrc_dict.apply_rule_near_due(tl_xt)
         return tl_xt
 
-
-    def apply_rule_near_due(tl_rsrc, now_dt=None):
-        """ applies the rule; adds a new key {'modified': True | False}
-         may or may not modify tl_rsrc 'status' and 'completed'.
-        @type tl_rsrc: dict
-        @param tl_rsrc: i.e. tl_rsrc['task']
-        @type now_dt: datetime.datetime
-        @param now_dt: datetime
-        @return tl_rsrc: tsk_rsrc with a new key: 'modified'.
+    @staticmethod
+    def apply_rule_near_due(task_rsrc, now_dt=None):
         """
-        tl_rsrc['modified'] = False  # ADDED attribute. REMOVED in update_tls_from()
-        t = tl_rsrc['task']
-        if 'due' in t:
+        applies the rule;
+        sets 'modified' bool;
+        May or may not modify task_rsrc 'status' and 'completed'.
+        @type task_rsrc: dict
+        @param task_rsrc: i.e. task_rsrc
+        @param now_dt: datetime - defaults to actual now() if no test now_date passed in.
+        @type now_dt: datetime
+
+        @return (
+            "task_rsrc": dict,
+            "is_modified": bool
+            ): tuple
+        """
+        t = task_rsrc
+        if 'due' in t:  # now add new ke: modified
             due_dt = h.dt_from_(t['due'])
             now_dt = datetime.now() if not now_dt else now_dt  # added for testing
-            tl_rsrc['modified'] = False  # default - so there is always a modified attr.
+            is_modified = False  # default - so there is always a modified attr.
             is_completed = t['status'] == 'completed'
             # MAIN PREDICATE
-            if near_due_rule(due_dt, now_dt):
+            if Rules.near_due_rule(due_dt, now_dt):
                 if is_completed:  #
-                    tl_rsrc['modified'] = True
+                    is_modified = True
                     t['status'] = 'needsAction'
                     t.pop('completed')
             else:  # not near enough, assure status is completed
                 if not is_completed:
-                    tl_rsrc['modified'] = True
+                    is_modified = True
                     t['status'] = 'completed'
-        return tl_rsrc
+        return task_rsrc, is_modified
 
-
+    @staticmethod
     def near_due_rule(due, now):
         """now dt is near enough to due dt.
         sets default before and after days to be near.
