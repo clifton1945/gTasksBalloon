@@ -2,7 +2,7 @@
 #   '3/12/14'/'3:26 PM'
 #
 # version 4.5 GIW  tasklist_style meaning logic is a function of the tasklist
-# TODO UAE dict instead of tuple unless 2.7 has named tuples
+# TODO USE dict instead of tuple unless 2.7 has named tuples
 # Model:
 #   logic and rules operations for updating tasks.
 #       operations are now a function of the tasklist.
@@ -114,22 +114,6 @@ class Pilot():
     def __init__(self):
         pass
 
-
-    @staticmethod
-    def update_pilot():
-        """
-        fundamentely a test tasklist. mocking production update_server()
-        """
-        tlt_list = Pilot.unshelve_pilot_data()
-        assert isinstance(tlt_list, list)
-        assert len(tlt_list) > 0
-        tlt_list = update_data_(tlt_list)
-        assert isinstance(tlt_list, list)
-        # tlt_list = Pilot.shelve_pilot(tlt_list)
-        # maybe print results
-        return tlt_list
-
-
     @staticmethod
     def serve_pilot_data():
         """
@@ -143,14 +127,14 @@ class Pilot():
         try:
             tl_rsrc = GBL_SERVICE.tasklists().get(tasklist=pilot_id).execute()
             t_rsrc_list = GBL_SERVICE.tasks().list(tasklist=pilot_id).execute()  # predicate
+            if 'items' in t_rsrc_list:
+                tlt_obj = tl_rsrc, t_rsrc_list['items']
+                tlt_obj_list.append(tlt_obj)
+
         except Exception as ex:
             template = "An exception of type {0} occured. Arguments:\n{1!r}"
             message = template.format(type(ex).__name__, ex.args)
             print "in [serve_pilot_data] ->" + message
-
-        if 'items' in t_rsrc_list:
-            tlt_obj = tl_rsrc, t_rsrc_list['items']
-            tlt_obj_list.append(tlt_obj)
 
         return tlt_obj_list
 
@@ -159,7 +143,6 @@ class Pilot():
         tlt_obj_list = Pilot.serve_pilot_data()
         Pilot.shelve_pilot_data(tlt_obj_list)
         return tlt_obj_list
-
 
     @staticmethod
     def shelve_pilot_data(tlt_obj_list):
@@ -171,7 +154,6 @@ class Pilot():
         ret = h.shelve_to_db(tlt_obj_list, Pilot.DB_FILE_NAME, Pilot.DB_ROOT_NAME)
         assert isinstance(ret, list)
 
-
     @staticmethod
     def unshelve_pilot_data():
         """
@@ -182,6 +164,19 @@ class Pilot():
         ret = h.unshelve_from_db(Pilot.DB_FILE_NAME, Pilot.DB_ROOT_NAME)
         assert isinstance(ret, list)  #
         return ret
+
+    @staticmethod
+    def update_pilot():
+        """
+        fundamentely a test tasklist. mocking production update_server()
+        """
+        tlt_list = Pilot.unshelve_pilot_data()
+        assert isinstance(tlt_list, list)
+        assert len(tlt_list) > 0
+        tlt_list = update_data_(tlt_list)
+        assert isinstance(tlt_list, list)
+        # maybe print results
+        return tlt_list
 
 
 # noinspection PyClassHasNoInit
