@@ -11,6 +11,32 @@ PILOT = tlt.Pilot
 class PilotTests(unittest.TestCase):
 
     def setUp(self):
+        """
+        {
+          "kind": "tasks#task",
+          "id": string,
+          "etag": etag,
+          "title": string,
+          "updated": datetime,
+          "selfLink": string,
+          "parent": string,
+          "position": string,
+          "notes": string,
+          "status": string,
+          "due": datetime,
+          "completed": datetime,
+          "deleted": boolean,
+          "hidden": boolean,
+          "links": [
+            {
+              "type": string,
+              "description": string,
+              "link": string
+            }
+          ]
+        }
+
+        """
         # noinspection PyPep8Naming,PyPep8Naming
         self.longMessage
 
@@ -45,6 +71,10 @@ class PilotTests(unittest.TestCase):
 
         tlt_obj_list = data = PILOT.unshelve_pilot_data()
         self.assertIsInstance(cut(data), list, 'expect a list w/ or w/o data.')
+        # add a mock task to list of tasks that will be modified
+        tl_rsrc, lotasks = data[0]
+        mock_task = {}
+        pass
 
 
 
