@@ -40,6 +40,12 @@ class PilotTests(unittest.TestCase):
             "tasklist title:{} has {} task rsrcs.".\
             format(tl_rsrc['title'], len(task_list))
 
+    def test_update_date_(self):
+        cut = tlt.update_data_
+
+        tlt_obj_list = data = PILOT.unshelve_pilot_data()
+        self.assertIsInstance(cut(data), list, 'expect a list w/ or w/o data.')
+
 
 
 class TlTSecondaryPredicates(unittest.TestCase):

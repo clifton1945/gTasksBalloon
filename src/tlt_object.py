@@ -222,11 +222,12 @@ class Rules():
             ): tuple
         """
         t = task_rsrc
+        is_modified = False  # default - so there is always a modified attr.
         if 'due' in t:  # now add new ke: modified
             due_dt = h.dt_from_(t['due'])
             now_dt = datetime.now() if not now_dt else now_dt  # added for testing
-            is_modified = False  # default - so there is always a modified attr.
             is_completed = t['status'] == 'completed'
+
             # MAIN PREDICATE
             if Rules.near_due_rule(due_dt, now_dt):
                 if is_completed:  #
