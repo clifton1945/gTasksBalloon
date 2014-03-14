@@ -125,20 +125,6 @@ class PilotTests(unittest.TestCase):
         self.assertIsInstance(lotasks, list, "expect a list of tasks list")
         pass
 
-    def test_update_pilot(self):
-        """
-
-        """
-        # assure
-        cut = tlt.update_pilot
-        tlt_obj_list = cut()
-
-        self.assertIsInstance(tlt_obj_list, list, 'expect a list w/ data.')
-        self.assertTrue(len(tlt_obj_list) == 1, "expect one only tasklist: PILOT")
-        tl_rsrc, lotasks = tlt_obj_list[0]  # therefore there is at least one tasklist
-        self.assertIsInstance(tl_rsrc, dict, "expect a tl resource dict")
-        self.assertIsInstance(lotasks, list, "expect a list of tasks list")
-
 
 class TlTSecondaryPredicates(unittest.TestCase):
     def setUp(self):

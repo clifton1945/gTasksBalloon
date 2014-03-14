@@ -165,19 +165,6 @@ class Pilot():
         assert isinstance(ret, list)  #
         return ret
 
-    @staticmethod
-    def update_pilot():
-        """
-        fundamentely a test tasklist. mocking production update_server()
-        """
-        tlt_list = Pilot.unshelve_pilot_data()
-        assert isinstance(tlt_list, list)
-        assert len(tlt_list) > 0
-        tlt_list = update_data_(tlt_list)
-        assert isinstance(tlt_list, list)
-        # maybe print results
-        return tlt_list
-
 
 # noinspection PyClassHasNoInit
 class Rules():
@@ -250,8 +237,8 @@ class Rules():
         """
         before_near = 2
         after_near = -2
-        print "due: ", due,  type(due)
-        print "now: ", now,  type(now)
+        # print "due: ", due,  type(due)
+        # print "now: ", now,  type(now)
         tdel = due - now  # days to go IS POSITIVE
         return after_near <= tdel.days <= before_near
 
