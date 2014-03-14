@@ -80,11 +80,12 @@ def serve_data_():
     return tlt_list
 
 
-def update_data_(tlt_data_list):
+def update_data_(tlt_data_list, tst_now=None):
     """
      modifies each tlt with update_rules which are a function of (tasklist_ type).
      returns a list of just the modified tlts.
     """
+    tst_now = datetime.now() if not tst_now else tst_now  # added for testing
     # ADD rules for TRIALS, IDEAS, GOALS, etc.
     modified_tasks_list = []
     modified_tlt_data_list = []
@@ -93,12 +94,12 @@ def update_data_(tlt_data_list):
         # triage tasklist types for different update rules.
         is_modified = False
         for t in t_list:
-            t, is_modified = Rules.apply_rule_near_due(t)
+            t, is_modified = Rules.apply_rule_near_due(t, tst_now)
             if is_modified:  # add this task_rsrc to list of tasks
-                modified_tasks_list.extend(t)
+                modified_tasks_list.append(t)
         tlt_tup = tl_dict, modified_tasks_list  # re build the tlt tuple
-        if is_modified: # append it to modified_tlt_data_list
-            modified_tlt_data_list.extend(tlt_tup)
+        if is_modified:  # append it to modified_tlt_data_list
+            modified_tlt_data_list.append(tlt_tup)
     return modified_tlt_data_list
 
 
@@ -206,15 +207,15 @@ class Rules():
         return tl_xt
 
     @staticmethod
-    def apply_rule_near_due(task_rsrc, now_dt=None):
+    def apply_rule_near_due(task_rsrc, tst_now=None):
         """
         applies the rule;
         sets 'modified' bool;
         May or may not modify task_rsrc 'status' and 'completed'.
         @type task_rsrc: dict
         @param task_rsrc: i.e. task_rsrc
-        @param now_dt: datetime - defaults to actual now() if no test now_date passed in.
-        @type now_dt: datetime
+        @param tst_now: datetime - defaults to actual now() if no test now_date passed in.
+        @type tst_now: datetime
 
         @return (
             "task_rsrc": dict,
@@ -225,11 +226,12 @@ class Rules():
         is_modified = False  # default - so there is always a modified attr.
         if 'due' in t:  # now add new ke: modified
             due_dt = h.dt_from_(t['due'])
-            now_dt = datetime.now() if not now_dt else now_dt  # added for testing
+            tst_now = datetime.now() if not tst_now else tst_now  # added for testing
             is_completed = t['status'] == 'completed'
 
             # MAIN PREDICATE
-            if Rules.near_due_rule(due_dt, now_dt):
+
+            if Rules.near_due_rule(due_dt, tst_now):
                 if is_completed:  #
                     is_modified = True
                     t['status'] = 'needsAction'
@@ -253,6 +255,8 @@ class Rules():
         """
         before_near = 2
         after_near = -2
+        print "due: ", due,  type(due)
+        print "now: ", now,  type(now)
         tdel = due - now  # days to go IS POSITIVE
         return after_near <= tdel.days <= before_near
 

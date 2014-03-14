@@ -50,9 +50,10 @@ def dt_from_(rfc_str):
     """
     # if rfc_str is datetime.isoformat()
     try:
-        ret = datetime.strptime(rfc_str[:-1], '%Y-%m-%dT%H:%M:%S.%f')
+        ret = datetime.strptime(rfc_str[:-1], "%Y-%m-%dT%H:%M:%S.%f")
     except ValueError:
-        print "[%s] not valid RFC3999 format." % rfc_str
+        print ("function:dt_from_(rfc_str) problem.\n  " +
+               "[%s] not valid RFC3999 format." % rfc_str)
         ret = None
     return ret
 
