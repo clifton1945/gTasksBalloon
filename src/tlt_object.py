@@ -223,7 +223,7 @@ class Pilot():
     def serve_pilot_data():
         """
         gets, returns tasklist='PILOTS' tlt_objects
-        now dictionary
+        tlt_objects are now  dictionary
         {"tl_rsrc": tasklist rsrc,
           "t_list": list of tasks rsrcs
         )
