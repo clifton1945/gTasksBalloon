@@ -1,6 +1,6 @@
 # 'tlt_object.py' in 'gTasksBalloon'
-#   version 4.6.0 GIW  using tlt_obj: {tasklist rsrc, list of task rsrcs}
-#   '3/15/14'/'10:40 AM'
+#   version 4.6.1 GIW  using a dict tlt_obj: {tasklist rsrc, list of task rsrcs}
+#   '3/15/14'
 #
 # Model:
 #   logic and rules operations for updating tasks.
@@ -39,44 +39,32 @@ def update_server_():
 
 def serve_data():
     """
-    provides a list of tuples( tasklist resources, list of task resources FOR THIS tasklist)
-    response ->
-        {
-          "kind": "tasks#taskLists",
-          "etag": string,
-          "nextPageToken": string,
-          "items": [
-            tasklists Resource
-          ]
-        }
-
-    The list maybe empty: NO tasklists.
-
-    gets a list of task resources:
-    reponse ->
-    {
-      "kind": "tasks#tasks",
-      "etag": string,
-      "nextPageToken": string,
-      "items": [
-        tasks Resource
-      ]
-    }
-
+    gets, returns tasklist='PILOTS' tlt_objects
+    tlt_objects are now  dictionary
+    {tl_rsrc: tasklist rsrc,
+      t_list: list of tasks rsrcs
+    )
+    @return: list of 'PILOTS' tlt_objects: dict
     @rtype: list
-    @return tlt_list: - a list of tuples
-     ( "update_shelve: dict,
-       "list_of_tasks": list
-       )
     """
-    tlt_list = []
-    list_o_tasklists = GBL_SERVICE.tasklists().list().execute()  # predicate
-    if 'items' in list_o_tasklists:
-        for a_tasklist in list_o_tasklists['items']:
-            list_o_tasks = GBL_SERVICE.tasks().list(tasklist=a_tasklist['id']).execute()
-            if 'items' in list_o_tasks:
-                tlt_list.append((a_tasklist, list_o_tasks['items']))
-    return tlt_list
+    # l0cals
+    tlt_obj_list = []
+    tlt_obj = {"tl_rsrc": None, "t_list": None}
+    try:
+        tls_list_response = GBL_SERVICE.tasklists().list().execute()  # predicate
+        if 'items' in tls_list_response:
+            for task_list_rsrc in tls_list_response['items']:
+                tasks_list_response = GBL_SERVICE.tasks().list(tasklist=task_list_rsrc['id']).execute()  # predicate
+                if 'items' in tasks_list_response:
+                    tlt_obj["tl_rsrc"] = task_list_rsrc
+                    tlt_obj["t_list"] = tasks_list_response['items']
+                    tlt_obj_list.append(tlt_obj)
+    except Exception as ex:
+        template = "An exception of type {0} occured. Arguments:\n{1!r}"
+        message = template.format(type(ex).__name__, ex.args)
+        print "in [serve_pilot_data] ->" + message
+
+    return tlt_obj_list
 
 
 def set_due_list(tlt_data_list):
