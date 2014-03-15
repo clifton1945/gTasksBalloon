@@ -75,6 +75,7 @@ class PilotTests(unittest.TestCase):
         self.assertIsInstance(tlt_obj_list, list, "expect a tlt_obj_list ")
         assert len(tlt_obj_list) == 1  # expect just PILOTS tasklist rsrc.
         tl_rsrc, task_list = tlt_obj_list[0]
+        # tl_rsrc, task_list = tlt_obj_list[0]
         self.assertIsInstance(tl_rsrc, dict, "tl is tasklist resource ")
         self.assertIsInstance(task_list, list, "list of tasks")
         print "serve_pilot_data ->\n  " \
