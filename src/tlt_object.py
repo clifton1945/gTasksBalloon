@@ -15,7 +15,7 @@
 
 
 from datetime import datetime
-import _bsddb
+# import _bsddb
 import task_helpers as h
 import server
 
@@ -180,11 +180,6 @@ class Rules():
                 if is_completed:  #
                     is_modified = True
                     t['status'] = 'needsAction'
-
-
-
-
-
                     t.pop('completed')
             else:  # not near enough, assure status is completed
                 if not is_completed:
@@ -209,6 +204,8 @@ class Rules():
         # print "now: ", now,  type(now)
         tdel = due - now  # days to go IS POSITIVE
         return after_near <= tdel.days <= before_near
+
+
 class Pilot():
 
     DB_FILE_NAME = 'myPilotDB'
@@ -233,12 +230,13 @@ class Pilot():
         pilot_id = "MTEzMzE3MDg1MTgzNjAxMjA2MzM6MTA4MzM1MTE1ODow"
         # l0cals
         tlt_obj_list = []
-        tlt_obj = {}
+        tlt_obj = {"tl_rsrc": None, "t_list": None}
         try:
             tl_rsrc = GBL_SERVICE.tasklists().get(tasklist=pilot_id).execute()
             task_list_rsrc = GBL_SERVICE.tasks().list(tasklist=pilot_id).execute()  # predicate
             if 'items' in task_list_rsrc:
-                tlt_obj = {"tl_rsrc": tl_rsrc, "t_list": task_list_rsrc['items']}
+                tlt_obj["tl_rsrc"] = tl_rsrc
+                tlt_obj["t_list"] = task_list_rsrc['items']
                 tlt_obj_list.append(tlt_obj)
 
         except Exception as ex:
@@ -274,10 +272,6 @@ class Pilot():
         ret = h.unshelve_from_db(Pilot.DB_FILE_NAME, Pilot.DB_ROOT_NAME)
         assert isinstance(ret, list)  #
         return ret
-# noinspection PyClassHasNoInit
-
-
-
 
 
 if __name__ == '__main__':
