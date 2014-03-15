@@ -1,5 +1,5 @@
 # 'tlt_object.py' in 'gTasksBalloon'
-#   version 4.6 GIW  using tlt_obj: {tasklist rsrc, list of task rsrcs}
+#   version 4.6.0 GIW  using tlt_obj: {tasklist rsrc, list of task rsrcs}
 #   '3/15/14'/'10:40 AM'
 #
 # Model:
