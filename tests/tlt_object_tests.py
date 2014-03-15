@@ -96,6 +96,24 @@ class PilotTests(unittest.TestCase):
               "tasklist title:{} has {} task rsrcs.". \
             format(tl_rsrc['title'], len(lotasks))
 
+    def test_tup2dict(self):
+        """
+        tlt_list  [tlt, .....]: list
+        tlt_obj -> (
+            tl_rsrc: dict,
+            list_of_tasks: list
+            ):  tuple
+        @return: tlt_dict
+        @rtype: dict
+        """
+        cut = tlt.tup2dict
+
+        data = PILOT.unshelve_pilot_data()
+        self.assertIsInstance(data, list, 'expect data is a list w/ or w/o data.')
+        ret = [cut(lst) for lst in data]
+        self.assertIsInstance(ret, list, 'expect return is a list w/ or w/o data.')
+        print ret
+
     def test_update_data_(self):
         cut = tlt.update_data_  # -> tlt_obj_list
         # REFACT lousy test - cut must work to test it working!.
@@ -124,6 +142,7 @@ class PilotTests(unittest.TestCase):
         self.assertIsInstance(tl_rsrc, dict, "expect a tl resource dict")
         self.assertIsInstance(lotasks, list, "expect a list of tasks list")
         pass
+
 
 
 class TlTSecondaryPredicates(unittest.TestCase):

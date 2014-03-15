@@ -80,6 +80,33 @@ def serve_data_():
     return tlt_list
 
 
+def set_due_list(tlt_data_list):
+    tltdl = tlt_data_list
+    mod_list = [x for l in tltdl
+            for tl in l
+            for x in tl
+            if isinstance(x, list)]
+    return mod_list
+
+
+def tup2dict(tlt_tup):
+    """
+    @param:tlt_tup
+    @type: dict
+
+    tlt_tup-> (
+        tl_rsrc: dict,
+        list_of_tasks: list
+        ):  tuple
+    @return: tlt_dict
+    @rtype: dict
+    """
+    tl_rsrc, t_list = tlt_tup
+    tlt_dict = {"tl_rsrc": tl_rsrc, "t_list": t_list}
+    return tlt_dict
+
+
+
 def update_data_(tlt_data_list, tst_now=None):
     """
      modifies each tlt with update_rules which are a function of (tasklist_ type).
@@ -217,6 +244,11 @@ class Rules():
                 if is_completed:  #
                     is_modified = True
                     t['status'] = 'needsAction'
+
+
+
+
+
                     t.pop('completed')
             else:  # not near enough, assure status is completed
                 if not is_completed:
