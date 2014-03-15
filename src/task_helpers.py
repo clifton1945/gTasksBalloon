@@ -12,7 +12,22 @@ FILTER_FACETS = 'FACETS'
 
 
  ################ HELPER FUNCTIONS #################
-def shelve_to_db(ttl_rsrcs_dict, db_file_name=DB_FILE_NAME, db_root_name=DB_ROOT_NAME):
+def shelve_to_db(tlt_rsrcs_list, db_file_name=DB_FILE_NAME, db_root_name=DB_ROOT_NAME):
+    """ shelves a dict of all tasks.
+
+    @type tlt_rsrcs_list: list
+    @param: tlt_rsrcs_list: list
+    @param db_file_name: <str> w/ default DB_FILE_NAME
+    @param db_root_name: <str> w/ default DB_ROOT_NAME
+    @return: tlt_rsrcs_list  unchanged
+    """
+    db = shelve.open(db_file_name)
+    db[db_root_name] = tlt_rsrcs_list
+    db.close()
+    return tlt_rsrcs_list
+
+
+def depr_shelve_to_db(ttl_rsrcs_dict, db_file_name=DB_FILE_NAME, db_root_name=DB_ROOT_NAME):
     """ shelves a dict of all tasks.
 
     @type ttl_rsrcs_dict: dict
@@ -32,13 +47,13 @@ def unshelve_from_db(db_file_name=DB_FILE_NAME, db_root_name=DB_ROOT_NAME):
 
     @param db_file_name: str w/ default
     @param db_root_name: str w/ default
-    @rtype: dict
-    @return ttl_rsrcs_dict: dict
+    @rtype: list
+    @return tlt_rsrcs_list: list
     """
     db = shelve.open(db_file_name)
-    ttl_rsrcs_dict = db[db_root_name]
+    tlt_rsrcs_list = db[db_root_name]
     db.close()
-    return ttl_rsrcs_dict
+    return tlt_rsrcs_list
 
 
 def dt_from_(rfc_str):
