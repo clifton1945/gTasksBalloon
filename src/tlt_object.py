@@ -24,17 +24,10 @@ GBL_SERVICE = server.get_service()  # REFACT just use h.functions
 
  #### MAIN PREDICATES ###
 def update_shelve():
-    ret = h.shelve_to_db(serve_data())  # REFACT doc in h.shelve data names
+    tlt_obj_list = serve_data()
+    ret = h.shelve_to_db(tlt_obj_list)  # REFACT doc in h.shelve data names
     assert isinstance(ret, list)
     return ret
-
-
-def update_server_():
-    # STUB
-    return []
-
-
- #### MAIN PREDICATE FUNCTIONS
 
 
 def serve_data():
@@ -67,7 +60,7 @@ def serve_data():
     return tlt_obj_list
 
 
-def set_due_list(tlt_data_list):
+def set_due_list(tlt_data_list):  # TODO LEARNING GIW AS list comprehension.
     tltdl = tlt_data_list
     mod_list = [x for l in tltdl
                 for tl in l
@@ -76,21 +69,12 @@ def set_due_list(tlt_data_list):
     return mod_list
 
 
-def tup2dict(tlt_tup):
-    """
-    @param:tlt_tup
-    @type: dict
+def update_server_():
+    # STUB
+    return []
 
-    tlt_tup-> (
-        tl_rsrc: dict,
-        list_of_tasks: list
-        ):  tuple
-    @return: tlt_dict
-    @rtype: dict
-    """
-    tl_rsrc, t_list = tlt_tup
-    tlt_dict = {"tl_rsrc": tl_rsrc, "t_list": t_list}
-    return tlt_dict
+
+ #### MAIN PREDICATE FUNCTIONS
 
 
 def update_data_(tlt_data_list, tst_now=None):
