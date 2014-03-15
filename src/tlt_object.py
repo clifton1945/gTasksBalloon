@@ -221,8 +221,8 @@ class Pilot():
         """
         gets, returns tasklist='PILOTS' tlt_objects
         tlt_objects are now  dictionary
-        {"tl_rsrc": tasklist rsrc,
-          "t_list": list of tasks rsrcs
+        {tl_rsrc: tasklist rsrc,
+          t_list: list of tasks rsrcs
         )
         @return: list of 'PILOTS' tlt_objects: dict
         @rtype: list

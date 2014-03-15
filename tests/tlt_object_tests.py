@@ -83,7 +83,7 @@ class PilotTests(unittest.TestCase):
         tlt_obj = tlt_obj_list[0]
         self.assertIsInstance(tlt_obj, dict, "expect tlt is dict.")
         self.assertIsInstance(tlt_obj['tl_rsrc'], dict, "exp: tl_rsrc is a dict resource")
-        self.assertIsInstance(tlt_obj['t_list'], list, "exp: a lisst of tasks rsrcs.")
+        self.assertIsInstance(tlt_obj['t_list'], list, "exp: a list of tasks rsrcs.")
         print_(self, tlt_obj)
 
     def test_update_pilot_shelve(self):
@@ -102,24 +102,6 @@ class PilotTests(unittest.TestCase):
         self.assertIsInstance(tlt_obj['tl_rsrc'], dict, "exp: tl_rsrc is a dict resource")
         self.assertIsInstance(tlt_obj['t_list'], list, "exp: a lisst of tasks rsrcs.")
         print_(self, tlt_obj)
-
-    def test_tup2dict(self):
-        """
-        tlt_list  [tlt, .....]: list
-        tlt_obj -> (
-            tl_rsrc: dict,
-            list_of_tasks: list
-            ):  tuple
-        @return: tlt_dict
-        @rtype: dict
-        """
-        cut = tlt.tup2dict
-
-        data = PILOT.unshelve_pilot_data()
-        self.assertIsInstance(data, list, 'expect data is a list w/ or w/o data.')
-        ret = [cut(lst) for lst in data]
-        self.assertIsInstance(ret, list, 'expect return is a list w/ or w/o data.')
-        print ret
 
 
 class TlTSecondaryPredicates(unittest.TestCase):
