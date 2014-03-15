@@ -69,14 +69,6 @@ def set_due_list(tlt_data_list):  # TODO LEARNING GIW AS list comprehension.
     return mod_list
 
 
-def update_server_():
-    # STUB
-    return []
-
-
- #### MAIN PREDICATE FUNCTIONS
-
-
 def update_data_(tlt_data_list, tst_now=None):
     """
      modifies each tlt with update_rules which are a function of (tasklist_ type).
@@ -98,6 +90,16 @@ def update_data_(tlt_data_list, tst_now=None):
         if is_modified:  # append it to modified_tlt_data_list
             modified_tlt_data_list.append(tlt_tup)
     return modified_tlt_data_list
+
+
+def update_server_():
+    # STUB
+    return []
+
+
+ #### MAIN PREDICATE FUNCTIONS
+
+
 
 
 # noinspection PyClassHasNoInit
