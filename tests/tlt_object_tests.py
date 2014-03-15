@@ -242,14 +242,13 @@ class ShelvedTltTests(unittest.TestCase):
     def test_update_data_(self):
         cut = tlt.update_data_
 
-        tlt_obj_list = self.tlt_obj_list
-        exp = cut(tlt_obj_list)
+        exp = cut(self.tlt_obj_list)
 
-        self.assertIsInstance(tlt_obj_list, list, "expect a tlt_obj_list ")
-        assert len(tlt_obj_list) > 0  # expect at least PILOTS tasklist.
-        print_tlt_list_(self, tlt_obj_list)
+        self.assertIsInstance(exp, list, "expect a tlt_obj_list ")
+        assert len(exp) > 0  # expect at least PILOTS tasklist.
+        print_tlt_list_(self, exp)
 
-        tlt_obj = tlt_obj_list[0]
+        tlt_obj = exp[0]
         self.assertIsInstance(tlt_obj, dict, "expect tlt is dict.")
         self.assertIsInstance(tlt_obj['tl_rsrc'], dict, "exp: tl_rsrc is a dict resource")
         self.assertIsInstance(tlt_obj['t_list'], list, "exp: a list of tasks rsrcs.")

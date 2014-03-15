@@ -78,15 +78,21 @@ def update_data_(tlt_data_list, tst_now=None):
     # ADD rules for TRIALS, IDEAS, GOALS, etc.
     modified_tasks_list = []
     modified_tlt_data_list = []
-    for tlt_tup in tlt_data_list:
-        tl_dict, t_list = tlt_tup  # unpack tlt_tup tuple
+    for tlt_dict in tlt_data_list:
+        # TODO  LEFT OFF HERE   - REFRACT FOR DICT
+        tl_dict = tlt_dict['tl_dict']
+        t_list = tlt_dict['t_list']
         # triage tasklist types for different update rules.
         is_modified = False
         for t in t_list:
             t, is_modified = Rules.apply_rule_near_due(t, tst_now)
+            tlt_obj["tl_rsrc"] = task_list_rsrc
+            tlt_obj["t_list"] = tasks_list_response['items']
+            tlt_obj_list.append(tlt_obj)
+
             if is_modified:  # add this task_rsrc to list of tasks
                 modified_tasks_list.append(t)
-        tlt_tup = tl_dict, modified_tasks_list  # re build the tlt tuple
+        tlt_dict = {tl_dict, modified_tasks_list  # re build the tlt tuple
         if is_modified:  # append it to modified_tlt_data_list
             modified_tlt_data_list.append(tlt_tup)
     return modified_tlt_data_list
