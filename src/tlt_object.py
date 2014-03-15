@@ -83,9 +83,9 @@ def serve_data_():
 def set_due_list(tlt_data_list):
     tltdl = tlt_data_list
     mod_list = [x for l in tltdl
-            for tl in l
-            for x in tl
-            if isinstance(x, list)]
+                for tl in l
+                for x in tl
+                if isinstance(x, list)]
     return mod_list
 
 
@@ -236,10 +236,9 @@ class Pilot():
         tlt_obj = {}
         try:
             tl_rsrc = GBL_SERVICE.tasklists().get(tasklist=pilot_id).execute()
-            t_rsrc_list = GBL_SERVICE.tasks().list(tasklist=pilot_id).execute()  # predicate
-            if 'items' in t_rsrc_list:
-                tlt_obj = {"tl_rsrc": tl_rsrc, "t_list": t_rsrc_list['items']
-                # tlt_obj = tl_rsrc, t_rsrc_list['items']
+            task_list_rsrc = GBL_SERVICE.tasks().list(tasklist=pilot_id).execute()  # predicate
+            if 'items' in task_list_rsrc:
+                tlt_obj = {"tl_rsrc": tl_rsrc, "t_list": task_list_rsrc['items']}
                 tlt_obj_list.append(tlt_obj)
 
         except Exception as ex:

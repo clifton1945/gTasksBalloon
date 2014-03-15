@@ -74,13 +74,13 @@ class PilotTests(unittest.TestCase):
         tlt_obj_list = PILOT.serve_pilot_data()
         self.assertIsInstance(tlt_obj_list, list, "expect a tlt_obj_list ")
         assert len(tlt_obj_list) == 1  # expect just PILOTS tasklist rsrc.
-        tl_rsrc, task_list = tlt_obj_list[0]
-        # tl_rsrc, task_list = tlt_obj_list[0]
-        self.assertIsInstance(tl_rsrc, dict, "tl is tasklist resource ")
-        self.assertIsInstance(task_list, list, "list of tasks")
+        tlt_obj = tlt_obj_list[0]
+        self.assertIsInstance(tlt_obj, dict, "expect tlt is dict.")
+        self.assertIsInstance(tlt['tl_rsrc'], dict, "exp: tl_rsrc is a dict resource")
+        self.assertIsInstance(tlt['t_list'], list, "exp: a lisst of tasks rsrcs.")
         print "serve_pilot_data ->\n  " \
               "tasklist title:{} has {} task rsrcs.". \
-            format(tl_rsrc['title'], len(task_list))
+            format(tlt['tl_rsrc']['title'], len(tlt['tl_rsrc']['t_list']))
 
     def test_update_pilot_shelve(self):
         tlt_obj_list = PILOT.update_pilot_shelve()
