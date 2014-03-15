@@ -1,8 +1,7 @@
 # 'tlt_object.py' in 'gTasksBalloon'
-#   '3/12/14'/'3:26 PM'
+#   version 4.6 GIW  using tlt_obj: {tasklist rsrc, list of task rsrcs}
+#   '3/15/14'/'10:40 AM'
 #
-# version 4.5 GIW  tasklist_style meaning logic is a function of the tasklist
-# TODO USE dict instead of tuple unless 2.7 has named tuples
 # Model:
 #   logic and rules operations for updating tasks.
 #       operations are now a function of the tasklist.
