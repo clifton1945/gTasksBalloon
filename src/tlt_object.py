@@ -24,7 +24,7 @@ GBL_SERVICE = server.get_service()  # REFACT just use h.functions
 
  #### MAIN PREDICATES ###
 def update_shelve():
-    ret = h.shelve_to_db(serve_data_())  # REFACT doc in h.shelve data names
+    ret = h.shelve_to_db(serve_data())  # REFACT doc in h.shelve data names
     assert isinstance(ret, list)
     return ret
 
@@ -37,7 +37,7 @@ def update_server_():
  #### MAIN PREDICATE FUNCTIONS
 
 
-def serve_data_():
+def serve_data():
     """
     provides a list of tuples( tasklist resources, list of task resources FOR THIS tasklist)
     response ->
