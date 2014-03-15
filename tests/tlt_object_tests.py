@@ -215,28 +215,31 @@ class ShelvedTltTests(unittest.TestCase):
         """
         # noinspection PyPep8Naming,PyPep8Naming
         self.longMessage = True
+        # data
+        self.tlt_obj_list = ret = h.unshelve_from_db()
+        assert isinstance(ret, list)  #
+
         _now = datetime.now()
         # set 3 days before now
         self.mock_now = _now
         _day = (_now.day + 3) % 28
         _due = _now.replace(day=_day)
         _due_str = h.rfc_from_(_due)
-        self.mock_due_str = _due_str
-        # tlt dictionary
-        self.mock_tl_rsrc = tl_rsrc = {
-            "kind": "tasks#taskList",
-            "id": "id here",
-            "etag": "etag here.",
-            "title": "PILOTS",
-        }
-        self.mock_task_hide = t_list = {
-            "title": "mock_needsAction",
-            "status": "needsAction",
-            "due": self.mock_due_str,
-            "notes": "a mock task."}
 
-        self.mock_tlt_obj = {"tl_rsrc": tl_rsrc, "t_list": t_list}
-        self.mock_tlt_obj_list = [self.mock_tlt_obj]
+    def test_data_valid(self):
+        tlt_obj_list = self.tlt_obj_list
+        # list of tasklists
+        self.assertIsInstance(tlt_obj_list, list, "expect a tlt_obj_list ")
+        assert len(tlt_obj_list) > 0  # expect at least PILOTS tasklist.
+        print_tlt_list_(self, tlt_obj_list)
+
+        tlt_obj = tlt_obj_list[0]
+        self.assertIsInstance(tlt_obj, dict, "expect tlt is dict.")
+        self.assertIsInstance(tlt_obj['tl_rsrc'], dict, "exp: tl_rsrc is a dict resource")
+        self.assertIsInstance(tlt_obj['t_list'], list, "exp: a list of tasks rsrcs.")
+        print_tlt_(self, tlt_obj)
+
+
 
 
 class ServerTltTests(unittest.TestCase):
