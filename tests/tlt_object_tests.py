@@ -8,14 +8,14 @@ import src.task_helpers as h
 PILOT = tlt.Pilot
 
 
-def print_tlt_list_(s, tlt_list):
+def depr_print_tlt_list_(s, tlt_list):
     # noinspection PyProtectedMember
     print "{}->\n  " \
         "tlt list has {} tlt objects.". \
         format(s._testMethodName, len(tlt_list))
 
 
-def print_tlt_(s, tlt_obj):
+def depr_print_tlt_(s, tlt_obj):
     # noinspection PyProtectedMember
     print "{}->\n    " \
         "one tlt object has tl_rsrc[title]:{}, and a task list of {} task rsrcs.". \
@@ -237,9 +237,12 @@ class ShelvedTltTests(unittest.TestCase):
             h.is_valid_tlt(self, tlt_obj, do_print)
 
     def test_sift_by_rule__near_due(self):
-        cut = tlt.sift_by_rule__near_due
+        cut = tlt.Rules.sift_by_rule__near_due
 
-        exp = cut(self.tlt_obj_list)
+        tlt_lst = cut(self.tlt_obj_list)
+
+        self.assertTrue(h.is_valid_tlt_list(self, tlt_lst, True)
+                        , "exp: setUp data list is valid.")
 
     def test_update_data_(self):
         cut = tlt.update_data_
