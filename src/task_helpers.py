@@ -10,8 +10,41 @@ DB_ROOT_NAME = 'MyTasks'
 FILTER_TRIALS = 'TRIALS'
 FILTER_FACETS = 'FACETS'
 
+################ HELPER FUNCTIONS #################
+###########  Tasklist Task [tlt] Testing #############
 
- ################ HELPER FUNCTIONS #################
+
+def is_valid_tlt(self_, tlt_obj, do_print=False):
+    ret = isinstance(tlt_obj, dict)\
+        and isinstance(tlt_obj['tl_rsrc'], dict)\
+        and isinstance(tlt_obj['t_list'], list)
+    if do_print:
+        print_tlt_(is_valid_tlt, tlt_obj)
+    return ret
+
+
+def is_valid_tlt_list(self_, tlt_obj_list, do_print=False):
+    ret = isinstance(tlt_obj_list, list)  # expect a tlt_obj_list ")
+    if do_print:
+        print_tlt_list_(self_, tlt_obj_list)
+    return ret
+
+
+def print_tlt_list_(self_, tlt_list):
+    # noinspection PyProtectedMember
+    print "{}->\n  " \
+        "tlt list has {} tlt objects.". \
+        format(self_._testMethodName, len(tlt_list))
+
+def print_tlt_(self_, tlt_obj):
+    # noinspection PyProtectedMember
+
+    print "{}->\n    " \
+        "one tlt object has tl_rsrc[title]:{}, and a task list of {} task rsrcs.". \
+        format(self_._testMethodName, tlt_obj['tl_rsrc']['title'], len(tlt_obj['t_list']))
+
+
+###############   Data ############################
 def shelve_to_db(tlt_rsrcs_list, db_file_name=DB_FILE_NAME, db_root_name=DB_ROOT_NAME):
     """ shelves a dict of all tasks.
 

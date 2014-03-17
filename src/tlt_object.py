@@ -75,27 +75,29 @@ def update_data_(tlt_data_list, tst_now=None):
      returns a list of just the modified tlts.
     """
     tst_now = datetime.now() if not tst_now else tst_now  # added for testing
+
     # ADD rules for TRIALS, IDEAS, GOALS, etc.
     modified_tasks_list = []
     modified_tlt_data_list = []
     for tlt_dict in tlt_data_list:
-        # TODO  LEFT OFF HERE   - REFRACT FOR DICT
-        tl_dict = tlt_dict['tl_dict']
-        t_list = tlt_dict['t_list']
         # triage tasklist types for different update rules.
         is_modified = False
-        for t in t_list:
-            t, is_modified = Rules.apply_rule_near_due(t, tst_now)
-            tlt_obj["tl_rsrc"] = task_list_rsrc
-            tlt_obj["t_list"] = tasks_list_response['items']
-            tlt_obj_list.append(tlt_obj)
+        for t in tlt_dict['t_list']:
+
+            t, is_modified = Rules.apply_rule_near_due(t, tst_now)  # PREDICATE
 
             if is_modified:  # add this task_rsrc to list of tasks
                 modified_tasks_list.append(t)
-        tlt_dict = {tl_dict, modified_tasks_list  # re build the tlt tuple
+        tlt_dict['t_list'] = modified_tasks_list
         if is_modified:  # append it to modified_tlt_data_list
-            modified_tlt_data_list.append(tlt_tup)
+            modified_tlt_data_list.append(tlt_dict)
     return modified_tlt_data_list
+
+
+def filter_modified_tlts(tlt_list):
+    """
+    return list of tlts the rules modified.
+    """
 
 
 def update_server_():
@@ -106,29 +108,34 @@ def update_server_():
  #### MAIN PREDICATE FUNCTIONS
 
 
-
-
 # noinspection PyClassHasNoInit
 class Rules():
     @staticmethod
-    def update_tls_from_(tl_rsrc_dict):
-        # update each tasklist in it's own scope.
-        #i.e. just the tasks in that tasklist.
-        # tl_r_d could be empty.
-        if tl_rsrc_dict:
-            return tl_rsrc_dict
+    def sift_by_rule__near_due(task_rsrc, tst_now=None):
+        """
+        applies the rule;
+        sets 'modified' bool;
+        May or may not modify task_rsrc 'status' and 'completed'.
+        @type task_rsrc: dict
+        @param task_rsrc: i.e. task_rsrc
+        @param tst_now: datetime - defaults to actual now() if no test now_date passed in.
+        @type tst_now: datetime
 
-        # locals
-        tl_xt = tl_rsrc_dict.copy()
-        tl = tl_xt['tasklist']
+        @return (
+            "task_rsrc": dict,
+            "is_modified": bool
+            ): tuple
+        """
+        is_modified = False  # default - so there is always a modified attr.
+        if 'due' in task_rsrc:  # now add new ke: modified
+            due_dt = h.dt_from_(task_rsrc['due'])
+            tst_now = datetime.now() if not tst_now else tst_now  # added for testing
+            is_completed = task_rsrc['status'] == 'completed'
 
-        # PREDICATE: triage tasks for updating
-        if tl['title'] == h.FILTER_FACETS:
-            tl_xt = tl_rsrc_dict.apply_rule_near_due(tl_xt)
-            # tl_xt = update_tl_facets(tl_xt)
-        else:  # update all the rest of the tasklists.
-            tl_xt = tl_rsrc_dict.apply_rule_near_due(tl_xt)
-        return tl_xt
+            # MAIN PREDICATE
+            is_modified = Rules.modify_task_rsrc(is_completed, is_modified, task_rsrc, tst_now, due_dt)
+
+        return task_rsrc, is_modified
 
     @staticmethod
     def apply_rule_near_due(task_rsrc, tst_now=None):
@@ -146,25 +153,31 @@ class Rules():
             "is_modified": bool
             ): tuple
         """
-        t = task_rsrc
         is_modified = False  # default - so there is always a modified attr.
-        if 'due' in t:  # now add new ke: modified
-            due_dt = h.dt_from_(t['due'])
+        if 'due' in task_rsrc:  # now add new ke: modified
+            due_dt = h.dt_from_(task_rsrc['due'])
             tst_now = datetime.now() if not tst_now else tst_now  # added for testing
-            is_completed = t['status'] == 'completed'
+            is_completed = task_rsrc['status'] == 'completed'
 
             # MAIN PREDICATE
+            is_modified = Rules.modify_task_rsrc(is_completed, is_modified, task_rsrc, tst_now, due_dt)
 
-            if Rules.near_due_rule(due_dt, tst_now):
-                if is_completed:  #
-                    is_modified = True
-                    t['status'] = 'needsAction'
-                    t.pop('completed')
-            else:  # not near enough, assure status is completed
-                if not is_completed:
-                    is_modified = True
-                    t['status'] = 'completed'
         return task_rsrc, is_modified
+
+    @staticmethod
+    def modify_task_rsrc(is_completed, is_modified, t, tst_now, due_dt):
+        if Rules.near_due_rule(due_dt, tst_now):
+            if is_completed:  #
+                is_modified = True
+                t['status'] = 'needsAction'
+                t.pop('completed')
+        else:  # not near enough, assure status is completed
+            if not is_completed:
+                is_modified = True
+                t['status'] = 'completed'
+        return is_modified
+
+
 
     @staticmethod
     def near_due_rule(due, now):
