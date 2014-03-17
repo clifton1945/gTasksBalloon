@@ -63,12 +63,13 @@ def serve_data():
     tlt_obj_list = []
     try:
         tls_list_response = GBL_SERVICE.tasklists().list().execute()  # predicate
-        tlt_obj = {"tl_rsrc": None, "t_list": None}
+        # tlt_obj = {"tl_rsrc": None, "t_list": None}
         if 'items' in tls_list_response:  # each tasklist
             for a_tasklist_rsrc in tls_list_response['items']:
                 tasks_list_response = GBL_SERVICE.tasks().list(tasklist=a_tasklist_rsrc['id']).execute()  # predicate
                 if 'items' in tasks_list_response:
                     # build a new tlt obj.
+                    tlt_obj = dict()
                     tlt_obj["t_list"] = tasks_list_response['items']
                     tlt_obj["tl_rsrc"] = a_tasklist_rsrc
                     tlt_obj_list.append(tlt_obj)

@@ -216,7 +216,7 @@ class ShelvedTltTests(unittest.TestCase):
         """
         # noinspection PyPep8Naming,PyPep8Naming
         self.longMessage = True
-        # dataKK
+        # data
         tlt_obj_list = h.unshelve_from_db()
         tlt_obj = {}
         assert h.is_valid_tlt_list(tlt_obj_list, True, self._testMethodName)
@@ -245,19 +245,20 @@ class ShelvedTltTests(unittest.TestCase):
         """
         tlt_obj_list = self.tlt_obj_list
 
-        do_print = True
+        do_print = False
         # list of tasklists
         h.is_valid_tlt_list(tlt_obj_list, do_print, self._testMethodName)
 
 
     def test_sift_by_rule__near_due(self):
         cut = tlt.Rules.sift_by_rule__near_due
-
+        do_print = False
         tlt_lst = cut(self.tlt_obj_list)
 
-        self.assertTrue(h.is_valid_tlt_list(tlt_lst, True, self)
+        self.assertTrue(h.is_valid_tlt_list(tlt_lst, do_print, self)
                         , "exp: setUp data list is valid.")
 
+    @unittest.skip("skip: test_update_data_()  till base is stable.")
     def test_update_data_(self):
         cut = tlt.update_data_
 
@@ -314,14 +315,15 @@ class ServerTltTests(unittest.TestCase):
         """
         # noinspection PyPep8Naming,PyPep8Naming
         self.longMessage = True
+        do_print = False
         # data
         tlt_obj_list = tlt.serve_data()  # TODO  test replace wit unshelve below afer serve passes valdity.
         tlt_obj = {}
-        assert h.is_valid_tlt_list(tlt_obj_list, True, self._testMethodName)
+        assert h.is_valid_tlt_list(tlt_obj_list, do_print, self._testMethodName)
         self.tlt_obj_list = tlt_obj_list
         l = len(tlt_obj_list)
         if l > 0:
-            assert h.is_valid_tlt(tlt_obj_list[0], True, self._testMethodName)
+            assert h.is_valid_tlt(tlt_obj_list[0], do_print, self._testMethodName)
             tlt_obj = tlt_obj_list[0]
         if l > 1:
             assert tlt_obj_list[1] != tlt_obj
@@ -336,10 +338,11 @@ class ServerTltTests(unittest.TestCase):
         _due_str = h.rfc_from_(_due)
 
     def test_serve_data(self):
+        do_print = False
         cut = tlt.serve_data
         tlt_obj_list = cut()
         # list of tasklists
-        self.assertTrue(h.is_valid_tlt_list(tlt_obj_list, True, self))
+        self.assertTrue(h.is_valid_tlt_list(tlt_obj_list, do_print, self))
 
         tlt_obj = tlt_obj_list[0]
 
