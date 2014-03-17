@@ -156,14 +156,14 @@ class PilotTests(unittest.TestCase):
         self.assertIsInstance(tlt_obj, dict, "expect tlt is dict.")
         self.assertIsInstance(tlt_obj['tl_rsrc'], dict, "exp: tl_rsrc is a dict resource")
         self.assertIsInstance(tlt_obj['t_list'], list, "exp: a list of tasks rsrcs.")
-        h.print_tlt_(self, tlt_obj)
+        h.print_tlt_(tlt_obj)
 
     def test_update_pilot_shelve(self):
         tlt_obj_list = PILOT.update_pilot_shelve()
         self.assertIsInstance(tlt_obj_list, list, "expect a tlt_obj_list ")
         assert len(tlt_obj_list) > 0  # expect just PILOTS tasklist rsrc.
         tlt_obj = tlt_obj_list[0]
-        h.print_tlt_(self, tlt_obj)
+        h.print_tlt_(tlt_obj)
 
     def test_unshelve_pilot_data(self):
         data = PILOT.unshelve_pilot_data()  # -> tlt_obj_list
@@ -173,7 +173,7 @@ class PilotTests(unittest.TestCase):
         self.assertIsInstance(tlt_obj, dict, "expect tlt is dict.")
         self.assertIsInstance(tlt_obj['tl_rsrc'], dict, "exp: tl_rsrc is a dict resource")
         self.assertIsInstance(tlt_obj['t_list'], list, "exp: a lisst of tasks rsrcs.")
-        h.print_tlt_(self, tlt_obj)
+        h.print_tlt_(tlt_obj)
 
 
 class ShelvedTltTests(unittest.TestCase):
@@ -217,8 +217,18 @@ class ShelvedTltTests(unittest.TestCase):
         # noinspection PyPep8Naming,PyPep8Naming
         self.longMessage = True
         # data
-        self.tlt_obj_list = ret = h.unshelve_from_db()
-        assert h.is_valid_tlt_list(self, ret, True)
+        tlt_obj_list = h.unshelve_from_db()
+        tlt_obj = {}
+        assert h.is_valid_tlt_list(tlt_obj_list, True, self._testMethodName)
+        self.tlt_obj_list = tlt_obj_list
+        l = len(tlt_obj_list)
+        if l > 0:
+            assert h.is_valid_tlt(tlt_obj_list[0], True, self._testMethodName)
+            tlt_obj = tlt_obj_list[0]
+        if l > 1:
+            assert tlt_obj_list[1] != tlt_obj
+        self.tlt_obj_list = tlt_obj_list
+        self.tlt_obj = tlt_obj
 
         _now = datetime.now()
         # set 3 days before now
@@ -228,21 +238,29 @@ class ShelvedTltTests(unittest.TestCase):
         _due_str = h.rfc_from_(_due)
 
     def test_data_valid(self):
+        """
+        checks tlt_list and tlt obj are valid
+        AND
+        confirms tlt_rsrc 0 != tlt_rsrc 1
+        """
         tlt_obj_list = self.tlt_obj_list
+
         do_print = True
         # list of tasklists
-        h.is_valid_tlt_list(self, tlt_obj_list, do_print)
+        h.is_valid_tlt_list(tlt_obj_list, do_print, self._testMethodName)
         # validate at least one tlt dict.
-        if len(tlt_obj_list) > 0:
-            tlt_obj= tlt_obj_list[0]
-            h.is_valid_tlt(self, tlt_obj, do_print)
+        l = len(tlt_obj_list)
+        if l > 0:
+            tlt_obj = tlt_obj_list[0]
+            h.is_valid_tlt(tlt_obj, do_print, self._testMethodName)
+
 
     def test_sift_by_rule__near_due(self):
         cut = tlt.Rules.sift_by_rule__near_due
 
         tlt_lst = cut(self.tlt_obj_list)
 
-        self.assertTrue(h.is_valid_tlt_list(self, tlt_lst, True)
+        self.assertTrue(h.is_valid_tlt_list(tlt_lst, True, self)
                         , "exp: setUp data list is valid.")
 
     def test_update_data_(self):
@@ -258,7 +276,7 @@ class ShelvedTltTests(unittest.TestCase):
         self.assertIsInstance(tlt_obj, dict, "expect tlt is dict.")
         self.assertIsInstance(tlt_obj['tl_rsrc'], dict, "exp: tl_rsrc is a dict resource")
         self.assertIsInstance(tlt_obj['t_list'], list, "exp: a list of tasks rsrcs.")
-        h.print_tlt_(self, tlt_obj)
+        h.print_tlt_(tlt_obj)
 
 
 class ServerTltTests(unittest.TestCase):
@@ -328,18 +346,10 @@ class ServerTltTests(unittest.TestCase):
         cut = tlt.serve_data
         tlt_obj_list = cut()
         # list of tasklists
-
-        self.assertIsInstance(tlt_obj_list, list, "expect a tlt_obj_list ")
-        assert len(tlt_obj_list) > 0  # expect at least PILOTS tasklist.
-        h.print_tlt_list_(tlt_obj_list, self)
-
-        self.assertTrue(h.is_valid_tlt_list(self, tlt_obj_list, True ))
+        self.assertTrue(h.is_valid_tlt_list(tlt_obj_list, True, self))
 
         tlt_obj = tlt_obj_list[0]
-        self.assertIsInstance(tlt_obj, dict, "expect tlt is dict.")
-        self.assertIsInstance(tlt_obj['tl_rsrc'], dict, "exp: tl_rsrc is a dict resource")
-        self.assertIsInstance(tlt_obj['t_list'], list, "exp: a list of tasks rsrcs.")
-        h.print_tlt_(self, tlt_obj)
+
 
     def test_update_shelve(self):
         cut = tlt.update_shelve
@@ -353,7 +363,7 @@ class ServerTltTests(unittest.TestCase):
         self.assertIsInstance(tlt_obj, dict, "expect tlt is dict.")
         self.assertIsInstance(tlt_obj['tl_rsrc'], dict, "exp: tl_rsrc is a dict resource")
         self.assertIsInstance(tlt_obj['t_list'], list, "exp: a list of tasks rsrcs.")
-        h.print_tlt_(self, tlt_obj)
+        h.print_tlt_(tlt_obj)
 
 
 if __name__ == '__main__':

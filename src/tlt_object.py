@@ -149,16 +149,12 @@ class Rules():
             "is_modified": bool
             ): tuple
         """
-        is_modified = False  # default - so there is always a modified attr.
         if 'due' in task_rsrc:  # now add new ke: modified
             due_dt = h.dt_from_(task_rsrc['due'])
             tst_now = datetime.now() if not tst_now else tst_now  # added for testing
-            is_completed = task_rsrc['status'] == 'completed'
-
             # MAIN PREDICATE
-            is_modified = Rules.modify_task_rsrc(is_completed, is_modified, task_rsrc, tst_now, due_dt)
-
-        return task_rsrc, is_modified
+            task_rsrc = Rules.modify_task_rsrc(task_rsrc, tst_now, due_dt)
+        return task_rsrc
 
     @staticmethod
     def apply_rule_near_due(task_rsrc, tst_now=None):
@@ -183,22 +179,26 @@ class Rules():
             is_completed = task_rsrc['status'] == 'completed'
 
             # MAIN PREDICATE
-            is_modified = Rules.modify_task_rsrc(is_completed, is_modified, task_rsrc, tst_now, due_dt)
+            is_modified = Rules.modify_task_rsrc(task_rsrc, tst_now, due_dt)
 
         return task_rsrc, is_modified
 
     @staticmethod
-    def modify_task_rsrc(is_completed, is_modified, t, tst_now, due_dt):
+    def modify_task_rsrc(task_rsrc, tst_now, due_dt):
+        """
+        modifies task rsrc w/ near_due_rule()
+        """
+        is_completed = True if task_rsrc['status'] == 'completed' else False
         if Rules.near_due_rule(due_dt, tst_now):
             if is_completed:  #
                 is_modified = True
-                t['status'] = 'needsAction'
-                t.pop('completed')
+                task_rsrc['status'] = 'needsAction'
+                task_rsrc.pop('completed')
         else:  # not near enough, assure status is completed
             if not is_completed:
                 is_modified = True
-                t['status'] = 'completed'
-        return is_modified
+                task_rsrc['status'] = 'completed'
+        return task_rsrc
 
 
 
