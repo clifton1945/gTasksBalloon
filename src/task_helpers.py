@@ -14,36 +14,58 @@ FILTER_FACETS = 'FACETS'
 ###########  Tasklist Task [tlt] Testing #############
 
 
-def is_valid_tlt(tlt_obj, do_print=False, test_name=None):
+def is_valid_tlt_(tlt_obj, do_print=False, test_name=None):
+    do_print = do_print and True
+    my_name = "is_valid_tlt_"
+
     ret = isinstance(tlt_obj, dict)\
         and isinstance(tlt_obj['tl_rsrc'], dict)\
         and isinstance(tlt_obj['t_list'], list)
+
     if do_print:
-        print_tlt_(tlt_obj, test_name)
+        msg = "  " + my_name if test_name is None else test_name + "." + my_name
+        print_tlt_(tlt_obj, msg)
     return ret
 
 
-def is_valid_tlt_list(tlt_obj_list, do_print=False, test_name=None):
+def is_valid_tlt_list_(tlt_obj_list, do_print=False, test_name=None):
+    do_print = do_print and True
+    my_name = "is_valid_tlt_list_"
+    if do_print:
+        msg = "  " + my_name if test_name is None else (test_name + "." + my_name)
+        print_tlt_list_(tlt_obj_list, msg)
+
     ret = isinstance(tlt_obj_list, list)  # expect a tlt_obj_list ")
-    for tlt_obj in tlt_obj_list:
-        if do_print:
-            print_tlt_list_(tlt_obj_list, test_name)
-            print_tlt_(tlt_obj, test_name)
-        return ret
+
+    l = len(tlt_obj_list)
+    if l > 0:
+        ret = ret and is_valid_tlt_(tlt_obj_list[0], do_print, my_name)
+    if l > 1:
+        ret = ret and is_valid_tlt_(tlt_obj_list[1], do_print, my_name)
+        ret = ret and tlt_obj_list[1] != tlt_obj_list[0]
+
+    return ret
 
 
-def print_tlt_list_(tlt_list, testMethodName=None):
+def print_tlt_list_(tlt_list, test_name=None):
     # noinspection PyProtectedMember
     print "{}->\n  " \
         "tlt list has {} tlt objects.". \
-        format(testMethodName, len(tlt_list))
+        format(test_name, len(tlt_list))
 
 
-def print_tlt_(tlt_obj, testMethodName=None):
+def print_t_list_(tlt_list, test_name=None):
+    # noinspection PyProtectedMember
+    print "{}->\n  " \
+        "t list has {} t objects.". \
+        format(test_name, len(tlt_list))
+
+
+def print_tlt_(tlt_obj, test_name=None):
     # noinspection PyProtectedMember
     print "{}->\n    " \
         "one tlt object has tl_rsrc[title]:{}, and a task list of {} task rsrcs.". \
-        format(testMethodName, tlt_obj['tl_rsrc']['title'], len(tlt_obj['t_list']))
+        format(test_name, tlt_obj['tl_rsrc']['title'], len(tlt_obj['t_list']))
 
 
 ###############   Data ############################

@@ -25,6 +25,7 @@ GBL_SERVICE = server.get_service()  # REFACT just use h.functions
  #### MAIN PREDICATES ###
 def update_shelve():
     tlt_obj_list = serve_data()
+
     ret = h.shelve_to_db(tlt_obj_list)  # REFACT doc in h.shelve data names
     assert isinstance(ret, list)
     return ret
@@ -60,6 +61,8 @@ def serve_data():
     @rtype: list
     """
     # l0cals
+    do_print = False
+    name = "f: serve_data"
     tlt_obj_list = []
     try:
         tls_list_response = GBL_SERVICE.tasklists().list().execute()  # predicate
@@ -81,6 +84,8 @@ def serve_data():
         message = template.format(type(ex).__name__, ex.args)
         print "in [serve_pilot_data] ->" + message
 
+    valid = h.is_valid_tlt_list_(tlt_obj_list, do_print, name )
+    # TODO FIX LAST COMMIT  lost updated is_valid tlt_l;ist code !!!!!!!!!
     return tlt_obj_list
 
 
