@@ -1,5 +1,5 @@
 # 'tlt_object.py' in 'gTasksBalloon'
-#   version 4.6.1 GIW  using a dict tlt_obj: {tasklist rsrc, list of task rsrcs}
+#   version 4.7.0 GIW  using a dict tlt_obj: {tasklist rsrc, list of task rsrcs}
 #   '3/15/14'
 #
 # Model:
@@ -23,18 +23,6 @@ GBL_SERVICE = server.get_service()  # REFACT just use h.functions OR from server
 
 
  #### MAIN PREDICATES ###
-def update_shelve():
-    """
-    selves server data -> list of tlt objects..
-    """
-    do_print = True
-    my_name = "update_shelve"
-
-    tlt_obj_list = h.shelve_to_db(serve_data())
-    assert h.is_valid_tlt_list_(tlt_obj_list, do_print, my_name)  # expect valis list of tlt objects.
-    return tlt_obj_list
-
-
 def serve_data():
     """
     creates and returns a tlt {
@@ -93,13 +81,27 @@ def serve_data():
     return tlt_obj_list
 
 
+
+
+def update_shelve():
+    """
+    selves server data -> list of tlt objects..
+    """
+    do_print = True
+    my_name = "update_shelve"
+
+    tlt_obj_list = h.shelve_to_db(serve_data())
+    assert h.is_valid_tlt_list_(tlt_obj_list, do_print, my_name)  # expect valis list of tlt objects.
+    return tlt_obj_list
+
+
 def update_data_(tlt_obj_list, tst_now=None):
     """
      modifies each tlt with update_rules which are a function of (tasklist_ type).
      returns a list of just the modified tlts.
     """
     tst_now = datetime.now() if not tst_now else tst_now  # added for testing
-
+    # TODO NEXT MAKE THIS WORK
     # ADD rules for TRIALS, IDEAS, GOALS, etc.
     modified_tasks_list = []
     modified_tlt_data_list = []
