@@ -231,13 +231,10 @@ class ShelvedTltTests(unittest.TestCase):
         do_print = True
         # list of tasklists
         h.is_valid_tlt_list(self, tlt_obj_list, do_print)
-        # h.print_tlt_list_(self, tlt_obj_list)
-
-        tlt_obj = tlt_obj_list[0]
-        self.assertIsInstance(tlt_obj, dict, "expect tlt is dict.")
-        self.assertIsInstance(tlt_obj['tl_rsrc'], dict, "exp: tl_rsrc is a dict resource")
-        self.assertIsInstance(tlt_obj['t_list'], list, "exp: a list of tasks rsrcs.")
-        print_tlt_(self, tlt_obj)
+        # validate at least one tlt dict.
+        if len(tlt_obj_list) > 0:
+            tlt_obj= tlt_obj_list[0]
+            h.is_valid_tlt(self, tlt_obj, do_print)
 
     def test_sift_by_rule__near_due(self):
         cut = tlt.sift_by_rule__near_due

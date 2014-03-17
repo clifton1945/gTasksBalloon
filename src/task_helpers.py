@@ -19,7 +19,7 @@ def is_valid_tlt(self_, tlt_obj, do_print=False):
         and isinstance(tlt_obj['tl_rsrc'], dict)\
         and isinstance(tlt_obj['t_list'], list)
     if do_print:
-        print_tlt_(is_valid_tlt, tlt_obj)
+        print_tlt_(self_, tlt_obj)
     return ret
 
 
@@ -36,9 +36,9 @@ def print_tlt_list_(self_, tlt_list):
         "tlt list has {} tlt objects.". \
         format(self_._testMethodName, len(tlt_list))
 
+
 def print_tlt_(self_, tlt_obj):
     # noinspection PyProtectedMember
-
     print "{}->\n    " \
         "one tlt object has tl_rsrc[title]:{}, and a task list of {} task rsrcs.". \
         format(self_._testMethodName, tlt_obj['tl_rsrc']['title'], len(tlt_obj['t_list']))
