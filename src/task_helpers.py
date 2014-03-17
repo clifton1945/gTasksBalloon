@@ -17,31 +17,31 @@ FILTER_FACETS = 'FACETS'
 def is_valid_tlt_(tlt_obj, do_print=False, test_name=None):
     do_print = do_print and True
     my_name = "is_valid_tlt_"
+    full_name = "  " + my_name if test_name is None else test_name + "." + my_name
 
     ret = isinstance(tlt_obj, dict)\
         and isinstance(tlt_obj['tl_rsrc'], dict)\
         and isinstance(tlt_obj['t_list'], list)
 
     if do_print:
-        msg = "  " + my_name if test_name is None else test_name + "." + my_name
-        print_tlt_(tlt_obj, msg)
+        print_tlt_(tlt_obj, full_name)
     return ret
 
 
 def is_valid_tlt_list_(tlt_obj_list, do_print=False, test_name=None):
     do_print = do_print and True
     my_name = "is_valid_tlt_list_"
+    full_name = ("   ." + my_name) if test_name is None else (test_name + "." + my_name)
     if do_print:
-        msg = "  " + my_name if test_name is None else (test_name + "." + my_name)
-        print_tlt_list_(tlt_obj_list, msg)
+        print_tlt_list_(tlt_obj_list, full_name)
 
     ret = isinstance(tlt_obj_list, list)  # expect a tlt_obj_list ")
 
     l = len(tlt_obj_list)
     if l > 0:
-        ret = ret and is_valid_tlt_(tlt_obj_list[0], do_print, my_name)
+        ret = ret and is_valid_tlt_(tlt_obj_list[0], do_print, full_name)
     if l > 1:
-        ret = ret and is_valid_tlt_(tlt_obj_list[1], do_print, my_name)
+        ret = ret and is_valid_tlt_(tlt_obj_list[1], do_print, full_name)
         ret = ret and tlt_obj_list[1] != tlt_obj_list[0]
 
     return ret

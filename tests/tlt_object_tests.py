@@ -5,7 +5,7 @@ import src.task_helpers as h
 
 
 ### GLOBALS
-PILOT = tlt.Pilot
+# PILOT = tlt.Pilot
 
 
 class FunctionTests(unittest.TestCase):
@@ -243,23 +243,18 @@ class ServerTltTests(unittest.TestCase):
         # list of tasklists
         self.assertTrue(h.is_valid_tlt_list_(tlt_obj_list, do_print, my_name))
 
-        tlt_obj = tlt_obj_list[0]
+        # tlt_obj = tlt_obj_list[0]
 
     def test_update_shelve(self):
         do_print = True
         my_name = self._testMethodName
         cut = tlt.update_shelve
-        tlt_obj_list = cut()
-        # list of tasklists
-        self.assertIsInstance(tlt_obj_list, list, "expect a tlt_obj_list ")
-        assert len(tlt_obj_list) > 0  # expect at least PILOTS tasklist.
-        h.print_tlt_list_(tlt_obj_list, self)
 
-        tlt_obj = tlt_obj_list[0]
-        self.assertIsInstance(tlt_obj, dict, "expect tlt is dict.")
-        self.assertIsInstance(tlt_obj['tl_rsrc'], dict, "exp: tl_rsrc is a dict resource")
-        self.assertIsInstance(tlt_obj['t_list'], list, "exp: a list of tasks rsrcs.")
-        h.print_tlt_(tlt_obj)
+        tlt_obj_list = cut()
+
+        # list of tasklists
+        self.assertTrue(h.is_valid_tlt_list_(tlt_obj_list, do_print, my_name))
+
 
 
 if __name__ == '__main__':
