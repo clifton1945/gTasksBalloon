@@ -145,9 +145,8 @@ class ShelvedTltTests(unittest.TestCase):
         # list of tasklists
         h.is_valid_tlt_list_(tlt_obj_list, do_print, self._testMethodName)
 
-
     def test_sift_by_rule__near_due(self):
-        cut = tlt.Rules.sift_by_rule__near_due
+        cut = tlt.Rules.sift_by_rule__near_due  # TODO FIX  this test fails cause cut not right yet.
         do_print = False
         tlt_lst = cut(self.tlt_obj_list)
 
@@ -213,7 +212,7 @@ class ServerTltTests(unittest.TestCase):
         self.longMessage = True
         do_print = False
         # data
-        tlt_obj_list = tlt.serve_data()  # TODO  test replace wit unshelve below afer serve passes valdity.
+        tlt_obj_list = h.unshelve_from_db()
         tlt_obj = {}
         assert h.is_valid_tlt_list_(tlt_obj_list, do_print, self._testMethodName)
         self.tlt_obj_list = tlt_obj_list
@@ -223,6 +222,7 @@ class ServerTltTests(unittest.TestCase):
             tlt_obj = tlt_obj_list[0]
         if l > 1:
             assert tlt_obj_list[1] != tlt_obj
+        # test data
         self.tlt_obj_list = tlt_obj_list
         self.tlt_obj = tlt_obj
 
@@ -233,6 +233,7 @@ class ServerTltTests(unittest.TestCase):
         _due = _now.replace(day=_day)
         _due_str = h.rfc_from_(_due)
 
+    @unittest.skip("SKIP: unless shelve data is corrupt.")
     def test_serve_data(self):
         do_print = True
         my_name = self._testMethodName
@@ -243,10 +244,8 @@ class ServerTltTests(unittest.TestCase):
         # list of tasklists
         self.assertTrue(h.is_valid_tlt_list_(tlt_obj_list, do_print, my_name))
 
-        # tlt_obj = tlt_obj_list[0]
-
     def test_update_shelve(self):
-        do_print = True
+        do_print = False
         my_name = self._testMethodName
         cut = tlt.update_shelve
 

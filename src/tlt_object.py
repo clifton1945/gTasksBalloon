@@ -19,16 +19,20 @@ import task_helpers as h
 import server
 
 ### GLOBAL
-GBL_SERVICE = server.get_service()  # REFACT just use h.functions
+GBL_SERVICE = server.get_service()  # REFACT just use h.functions OR from server as s
 
 
  #### MAIN PREDICATES ###
 def update_shelve():
-    tlt_obj_list = serve_data()
+    """
+    selves server data -> list of tlt objects..
+    """
+    do_print = True
+    my_name = "update_shelve"
 
-    ret = h.shelve_to_db(tlt_obj_list)  # REFACT doc in h.shelve data names
-    assert isinstance(ret, list)
-    return ret
+    tlt_obj_list = h.shelve_to_db(serve_data())
+    assert h.is_valid_tlt_list_(tlt_obj_list, do_print, my_name)  # expect valis list of tlt objects.
+    return tlt_obj_list
 
 
 def serve_data():
@@ -84,21 +88,12 @@ def serve_data():
         message = template.format(type(ex).__name__, ex.args)
         print "in [serve_pilot_data] ->" + message
 
-    valid = h.is_valid_tlt_list_(tlt_obj_list, do_print, name )
-    # TODO FIX LAST COMMIT  lost updated is_valid tlt_l;ist code !!!!!!!!!
+    valid = h.is_valid_tlt_list_(tlt_obj_list, do_print, name)
+
     return tlt_obj_list
 
 
-def set_due_list(tlt_data_list):  # TODO LEARNING GIW AS list comprehension.
-    tltdl = tlt_data_list
-    mod_list = [x for l in tltdl
-                for tl in l
-                for x in tl
-                if isinstance(x, list)]
-    return mod_list
-
-
-def update_data_(tlt_data_list, tst_now=None):
+def update_data_(tlt_obj_list, tst_now=None):
     """
      modifies each tlt with update_rules which are a function of (tasklist_ type).
      returns a list of just the modified tlts.
@@ -108,7 +103,7 @@ def update_data_(tlt_data_list, tst_now=None):
     # ADD rules for TRIALS, IDEAS, GOALS, etc.
     modified_tasks_list = []
     modified_tlt_data_list = []
-    for tlt_dict in tlt_data_list:
+    for tlt_dict in tlt_obj_list:
         # triage tasklist types for different update rules.
         is_modified = False
         for t in tlt_dict['t_list']:
@@ -123,16 +118,19 @@ def update_data_(tlt_data_list, tst_now=None):
     return modified_tlt_data_list
 
 
+def set_due_list(tlt_obj_list):  # TODO LEARNING GIW AS list comprehension.
+    tltdl = tlt_obj_list
+    mod_list = [x for l in tltdl
+                for tl in l
+                for x in tl
+                if isinstance(x, list)]
+    return mod_list
+
+
 def filter_modified_tlts(tlt_list):
     """
     return list of tlts the rules modified.
     """
-
-
-def update_server_():
-    # STUB
-    return []
-
 
  #### MAIN PREDICATE FUNCTIONS
 
@@ -205,8 +203,6 @@ class Rules():
                 is_modified = True
                 task_rsrc['status'] = 'completed'
         return task_rsrc
-
-
 
     @staticmethod
     def near_due_rule(due, now):
