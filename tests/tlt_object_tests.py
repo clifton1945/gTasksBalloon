@@ -149,20 +149,21 @@ class PilotTests(unittest.TestCase):
 
     def test_serve_pilot_data(self):
         tlt_obj_list = PILOT.serve_pilot_data()
+
         self.assertIsInstance(tlt_obj_list, list, "expect a tlt_obj_list ")
         assert len(tlt_obj_list) == 1  # expect just PILOTS tasklist rsrc.
         tlt_obj = tlt_obj_list[0]
         self.assertIsInstance(tlt_obj, dict, "expect tlt is dict.")
         self.assertIsInstance(tlt_obj['tl_rsrc'], dict, "exp: tl_rsrc is a dict resource")
         self.assertIsInstance(tlt_obj['t_list'], list, "exp: a list of tasks rsrcs.")
-        print_tlt_(self, tlt_obj)
+        h.print_tlt_(self, tlt_obj)
 
     def test_update_pilot_shelve(self):
         tlt_obj_list = PILOT.update_pilot_shelve()
         self.assertIsInstance(tlt_obj_list, list, "expect a tlt_obj_list ")
         assert len(tlt_obj_list) > 0  # expect just PILOTS tasklist rsrc.
         tlt_obj = tlt_obj_list[0]
-        print_tlt_(self, tlt_obj)
+        h.print_tlt_(self, tlt_obj)
 
     def test_unshelve_pilot_data(self):
         data = PILOT.unshelve_pilot_data()  # -> tlt_obj_list
@@ -172,7 +173,7 @@ class PilotTests(unittest.TestCase):
         self.assertIsInstance(tlt_obj, dict, "expect tlt is dict.")
         self.assertIsInstance(tlt_obj['tl_rsrc'], dict, "exp: tl_rsrc is a dict resource")
         self.assertIsInstance(tlt_obj['t_list'], list, "exp: a lisst of tasks rsrcs.")
-        print_tlt_(self, tlt_obj)
+        h.print_tlt_(self, tlt_obj)
 
 
 class ShelvedTltTests(unittest.TestCase):
@@ -217,7 +218,7 @@ class ShelvedTltTests(unittest.TestCase):
         self.longMessage = True
         # data
         self.tlt_obj_list = ret = h.unshelve_from_db()
-        assert isinstance(ret, list)  #
+        assert h.is_valid_tlt_list(self, ret, True)
 
         _now = datetime.now()
         # set 3 days before now
@@ -251,13 +252,13 @@ class ShelvedTltTests(unittest.TestCase):
 
         self.assertIsInstance(exp, list, "expect a tlt_obj_list ")
         assert len(exp) > 0  # expect at least PILOTS tasklist.
-        print_tlt_list_(self, exp)
+        h.print_tlt_list_(exp, self)
 
         tlt_obj = exp[0]
         self.assertIsInstance(tlt_obj, dict, "expect tlt is dict.")
         self.assertIsInstance(tlt_obj['tl_rsrc'], dict, "exp: tl_rsrc is a dict resource")
         self.assertIsInstance(tlt_obj['t_list'], list, "exp: a list of tasks rsrcs.")
-        print_tlt_(self, tlt_obj)
+        h.print_tlt_(self, tlt_obj)
 
 
 class ServerTltTests(unittest.TestCase):
@@ -327,15 +328,18 @@ class ServerTltTests(unittest.TestCase):
         cut = tlt.serve_data
         tlt_obj_list = cut()
         # list of tasklists
+
         self.assertIsInstance(tlt_obj_list, list, "expect a tlt_obj_list ")
         assert len(tlt_obj_list) > 0  # expect at least PILOTS tasklist.
-        print_tlt_list_(self, tlt_obj_list)
+        h.print_tlt_list_(tlt_obj_list, self)
+
+        self.assertTrue(h.is_valid_tlt_list(self, tlt_obj_list, True ))
 
         tlt_obj = tlt_obj_list[0]
         self.assertIsInstance(tlt_obj, dict, "expect tlt is dict.")
         self.assertIsInstance(tlt_obj['tl_rsrc'], dict, "exp: tl_rsrc is a dict resource")
         self.assertIsInstance(tlt_obj['t_list'], list, "exp: a list of tasks rsrcs.")
-        print_tlt_(self, tlt_obj)
+        h.print_tlt_(self, tlt_obj)
 
     def test_update_shelve(self):
         cut = tlt.update_shelve
@@ -343,15 +347,16 @@ class ServerTltTests(unittest.TestCase):
         # list of tasklists
         self.assertIsInstance(tlt_obj_list, list, "expect a tlt_obj_list ")
         assert len(tlt_obj_list) > 0  # expect at least PILOTS tasklist.
-        print_tlt_list_(self, tlt_obj_list)
+        h.print_tlt_list_(tlt_obj_list, self)
 
         tlt_obj = tlt_obj_list[0]
         self.assertIsInstance(tlt_obj, dict, "expect tlt is dict.")
         self.assertIsInstance(tlt_obj['tl_rsrc'], dict, "exp: tl_rsrc is a dict resource")
         self.assertIsInstance(tlt_obj['t_list'], list, "exp: a list of tasks rsrcs.")
-        print_tlt_(self, tlt_obj)
+        h.print_tlt_(self, tlt_obj)
 
 
 if __name__ == '__main__':
+    tlt_list = tlt.update_server_()
     unittest.main()
 

@@ -32,26 +32,49 @@ def update_shelve():
 
 def serve_data():
     """
-    gets, returns tasklist='PILOTS' tlt_objects
-    tlt_objects are now  dictionary
-    {tl_rsrc: tasklist rsrc,
-      t_list: list of tasks rsrcs
-    )
-    @return: list of 'PILOTS' tlt_objects: dict
+    creates and returns a tlt {
+        tasklist rsrc: dict'
+         tasks_list: list
+         }: dict
+
+    tls_list_response ->
+    {
+      "kind": "tasks#taskLists",
+      "etag": string,
+      "nextPageToken": string,
+      "items": [
+        tasklists Resource
+      ]
+    }
+    tasks_list_response ->
+    {
+      "kind": "tasks#tasks",
+      "etag": string,
+      "nextPageToken": string,
+      "items": [
+        tasks Resource
+      ]
+    }
+
+    @return: list of tlt_objects: dict
     @rtype: list
     """
     # l0cals
     tlt_obj_list = []
-    tlt_obj = {"tl_rsrc": None, "t_list": None}
     try:
         tls_list_response = GBL_SERVICE.tasklists().list().execute()  # predicate
-        if 'items' in tls_list_response:
-            for task_list_rsrc in tls_list_response['items']:
-                tasks_list_response = GBL_SERVICE.tasks().list(tasklist=task_list_rsrc['id']).execute()  # predicate
+        tlt_obj = {"tl_rsrc": None, "t_list": None}
+        if 'items' in tls_list_response:  # each tasklist
+            for a_tasklist_rsrc in tls_list_response['items']:
+                tasks_list_response = GBL_SERVICE.tasks().list(tasklist=a_tasklist_rsrc['id']).execute()  # predicate
                 if 'items' in tasks_list_response:
-                    tlt_obj["tl_rsrc"] = task_list_rsrc
+                    # build a new tlt obj.
                     tlt_obj["t_list"] = tasks_list_response['items']
+                    tlt_obj["tl_rsrc"] = a_tasklist_rsrc
                     tlt_obj_list.append(tlt_obj)
+                    # building list of tlt objects.
+                # else no tasks in this tasklist: try another tasklist.
+        # else there are no tasklists: return empty list
     except Exception as ex:
         template = "An exception of type {0} occured. Arguments:\n{1!r}"
         message = template.format(type(ex).__name__, ex.args)
@@ -267,5 +290,6 @@ class Pilot():
 
 
 if __name__ == '__main__':
-    update_shelve()
+    tlts_list = update_shelve()
+    pass
     # add a some super test or print function here.

@@ -26,15 +26,15 @@ def is_valid_tlt(self_, tlt_obj, do_print=False):
 def is_valid_tlt_list(self_, tlt_obj_list, do_print=False):
     ret = isinstance(tlt_obj_list, list)  # expect a tlt_obj_list ")
     if do_print:
-        print_tlt_list_(self_, tlt_obj_list)
+        print_tlt_list_(tlt_obj_list, self_)
     return ret
 
 
-def print_tlt_list_(self_, tlt_list):
+def print_tlt_list_(tlt_list, name):
     # noinspection PyProtectedMember
     print "{}->\n  " \
         "tlt list has {} tlt objects.". \
-        format(self_._testMethodName, len(tlt_list))
+        format(name._testMethodName, len(tlt_list))
 
 
 def print_tlt_(self_, tlt_obj):
