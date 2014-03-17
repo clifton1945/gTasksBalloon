@@ -216,7 +216,7 @@ class ShelvedTltTests(unittest.TestCase):
         """
         # noinspection PyPep8Naming,PyPep8Naming
         self.longMessage = True
-        # data
+        # dataKK
         tlt_obj_list = h.unshelve_from_db()
         tlt_obj = {}
         assert h.is_valid_tlt_list(tlt_obj_list, True, self._testMethodName)
@@ -248,11 +248,6 @@ class ShelvedTltTests(unittest.TestCase):
         do_print = True
         # list of tasklists
         h.is_valid_tlt_list(tlt_obj_list, do_print, self._testMethodName)
-        # validate at least one tlt dict.
-        l = len(tlt_obj_list)
-        if l > 0:
-            tlt_obj = tlt_obj_list[0]
-            h.is_valid_tlt(tlt_obj, do_print, self._testMethodName)
 
 
     def test_sift_by_rule__near_due(self):
@@ -319,28 +314,26 @@ class ServerTltTests(unittest.TestCase):
         """
         # noinspection PyPep8Naming,PyPep8Naming
         self.longMessage = True
+        # data
+        tlt_obj_list = tlt.serve_data()  # TODO  test replace wit unshelve below afer serve passes valdity.
+        tlt_obj = {}
+        assert h.is_valid_tlt_list(tlt_obj_list, True, self._testMethodName)
+        self.tlt_obj_list = tlt_obj_list
+        l = len(tlt_obj_list)
+        if l > 0:
+            assert h.is_valid_tlt(tlt_obj_list[0], True, self._testMethodName)
+            tlt_obj = tlt_obj_list[0]
+        if l > 1:
+            assert tlt_obj_list[1] != tlt_obj
+        self.tlt_obj_list = tlt_obj_list
+        self.tlt_obj = tlt_obj
+
         _now = datetime.now()
         # set 3 days before now
         self.mock_now = _now
         _day = (_now.day + 3) % 28
         _due = _now.replace(day=_day)
         _due_str = h.rfc_from_(_due)
-        self.mock_due_str = _due_str
-        # tlt dictionary
-        self.mock_tl_rsrc = tl_rsrc = {
-            "kind": "tasks#taskList",
-            "id": "id here",
-            "etag": "etag here.",
-            "title": "PILOTS",
-        }
-        self.mock_task_hide = t_list = {
-            "title": "mock_needsAction",
-            "status": "needsAction",
-            "due": self.mock_due_str,
-            "notes": "a mock task."}
-
-        self.mock_tlt_obj = {"tl_rsrc": tl_rsrc, "t_list": t_list}
-        self.mock_tlt_obj_list = [self.mock_tlt_obj]
 
     def test_serve_data(self):
         cut = tlt.serve_data
