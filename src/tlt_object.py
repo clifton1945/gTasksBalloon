@@ -1,6 +1,6 @@
 # 'tlt_object.py' in 'gTasksBalloon'
 #   version 4.7.0 GIW  using a dict tlt_obj: {tasklist rsrc, list of task rsrcs}
-#   '3/15/14'
+#   '3/17/14'
 #
 # Model:
 #   logic and rules operations for updating tasks.
@@ -81,8 +81,6 @@ def serve_data():
     return tlt_obj_list
 
 
-
-
 def update_shelve():
     """
     selves server data -> list of tlt objects..
@@ -101,10 +99,12 @@ def update_data_(tlt_obj_list, tst_now=None):
      returns a list of just the modified tlts.
     """
     tst_now = datetime.now() if not tst_now else tst_now  # added for testing
-    # TODO NEXT MAKE THIS WORK
     # ADD rules for TRIALS, IDEAS, GOALS, etc.
+
     modified_tasks_list = []
     modified_tlt_data_list = []
+
+    # TODO NEXT GIW  Rules.apply_rule_near_due(tlt_list, tst_now)  # PREDICATE
     for tlt_dict in tlt_obj_list:
         # triage tasklist types for different update rules.
         is_modified = False
@@ -117,6 +117,7 @@ def update_data_(tlt_obj_list, tst_now=None):
         tlt_dict['t_list'] = modified_tasks_list
         if is_modified:  # append it to modified_tlt_data_list
             modified_tlt_data_list.append(tlt_dict)
+
     return modified_tlt_data_list
 
 
@@ -139,31 +140,31 @@ def filter_modified_tlts(tlt_list):
 
 # noinspection PyClassHasNoInit
 class Rules():
-    @staticmethod
-    def sift_by_rule__near_due(task_rsrc, tst_now=None):
-        """
-        applies the rule;
-        sets 'modified' bool;
-        May or may not modify task_rsrc 'status' and 'completed'.
-        @type task_rsrc: dict
-        @param task_rsrc: i.e. task_rsrc
-        @param tst_now: datetime - defaults to actual now() if no test now_date passed in.
-        @type tst_now: datetime
+    # @staticmethod
+    # def sift_by_rule__near_due(task_rsrc, tst_now=None):
+    #     """
+    #     applies the rule;
+    #     sets 'modified' bool;
+    #     May or may not modify task_rsrc 'status' and 'completed'.
+    #     @type task_rsrc: dict
+    #     @param task_rsrc: i.e. task_rsrc
+    #     @param tst_now: datetime - defaults to actual now() if no test now_date passed in.
+    #     @type tst_now: datetime
+    #
+    #     @return (
+    #         "task_rsrc": dict,
+    #         "is_modified": bool
+    #         ): tuple
+    #     """
+    #     if 'due' in task_rsrc:  # now add new ke: modified
+    #         due_dt = h.dt_from_(task_rsrc['due'])
+    #         tst_now = datetime.now() if not tst_now else tst_now  # added for testing
+    #         # MAIN PREDICATE
+    #         task_rsrc = Rules.modify_task_rsrc(task_rsrc, tst_now, due_dt)
+    #     return task_rsrc
 
-        @return (
-            "task_rsrc": dict,
-            "is_modified": bool
-            ): tuple
-        """
-        if 'due' in task_rsrc:  # now add new ke: modified
-            due_dt = h.dt_from_(task_rsrc['due'])
-            tst_now = datetime.now() if not tst_now else tst_now  # added for testing
-            # MAIN PREDICATE
-            task_rsrc = Rules.modify_task_rsrc(task_rsrc, tst_now, due_dt)
-        return task_rsrc
-
     @staticmethod
-    def apply_rule_near_due(task_rsrc, tst_now=None):
+    def depr_apply_rule_near_due(task_rsrc, tst_now=None):
         """
         applies the rule;
         sets 'modified' bool;
@@ -189,8 +190,32 @@ class Rules():
 
         return task_rsrc, is_modified
 
+    def apply_rule_near_due(tlt_objs_list, tst_now=None):
+        """ REFACT THIS
+        # applies this rule ;
+        # sets 'modified' bool;
+        # May or may not modify task_rsrc 'status' and 'completed'.
+        # @type task_rsrc: dict
+        # @param task_rsrc: i.e. task_rsrc
+        # @param tst_now: datetime - defaults to actual now() if no test now_date passed in.
+        # @type tst_now: datetime
+        #
+        # @return (
+        #     "task_rsrc": dict,
+        #     "is_modified": bool
+        #     ): tuple
+        """
+        #locals
+        tlt_lst = tlt_objs_list
+        rule = Rules.modify_task_rsrc
+
+        mod_tlt_list = []  # modified_tlt_objs_list
+        ret = [rule(tlt) for tlt in tlt_lst]
+
+        return mod_tlt_list
+
     @staticmethod
-    def modify_task_rsrc(task_rsrc, tst_now, due_dt):
+    def modify_task_rsrc(task_rsrc, tst_now=None, due_dt=None):
         """
         modifies task rsrc w/ near_due_rule()
         """
