@@ -23,9 +23,11 @@ tests/task_model_TESTS.py
 
 src/bak.
 
-*** changing to NEW_MODEL without the full TaskClass
+*** changing to tlt_objects model
 src/task_class.py
 tests/task_class_TESTS.py
+src/task_model.py
+tests/task_models_TEST.py
 
 *** root
 __init__.py

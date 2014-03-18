@@ -4,7 +4,7 @@ __author__ = 'CLIF'
 
 import unittest
 import server_TESTS
-import task_model_TESTS
+# import task_model_TESTS
 import task_model_server_tests
 
 
@@ -15,7 +15,7 @@ class ProjectTests(unittest.TestCase):
 loader = unittest.TestLoader()
 
 suite = loader.loadTestsFromModule(server_TESTS)
-suite.addTests(loader.loadTestsFromModule(task_model_TESTS))
+# suite.addTests(loader.loadTestsFromModule(task_model_TESTS))
 suite.addTests(loader.loadTestsFromModule(presenter_TESTS))
 suite.addTests(loader.loadTestsFromModule(task_model_server_tests))
 
