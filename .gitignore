@@ -17,9 +17,7 @@ deprecated/*
 *.txt
 
 *** changing to tasklist mode.
-src/task_model.py
-src/g Tasks APi*
-tests/task_model_TESTS.py
+
 
 src/bak.
 
@@ -28,6 +26,9 @@ src/task_class.py
 tests/task_class_TESTS.py
 src/task_model.py
 tests/task_models_TEST.py
+src/task_model.py
+src/g Tasks APi*
+tests/task_model_TESTS.py
 
 *** root
 __init__.py
