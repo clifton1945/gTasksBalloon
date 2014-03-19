@@ -162,9 +162,11 @@ class ShelvedTltTests(unittest.TestCase):
         do_print = False
         msg = self._testMethodName
         data = self.tlt_obj_list
+        # as received
+        #E  TODO NEXT in test_update_data_  look at Pilot only data before and after applying cut
         exp = cut(data)
-
         tst = h.is_valid_tlt_list_(data, do_print, msg)
+        # has anything changed??
 
 
 class ServerTltTests(unittest.TestCase):
@@ -242,7 +244,7 @@ class ServerTltTests(unittest.TestCase):
         # list of tasklists
         self.assertTrue(h.is_valid_tlt_list_(tlt_obj_list, do_print, my_name))
 
-    #@unittest.skip("skip: test_update_data_()  till base is stable.")
+    @unittest.skip("skip: test_update_data_()  until we nee to keep hitting the server.")
     def test_update_data_(self):
         cut = tlt.update_data_
         # locals
