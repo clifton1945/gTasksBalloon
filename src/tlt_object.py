@@ -101,14 +101,14 @@ def update_data_(tlt_obj_list):
     """
     # ADD rules for TRIALS, IDEAS, GOALS, etc.
     my_name = "f.update_data_"
-
+    # TODO FIX  the mod list MUST MEET two requirements: near due AND requires a change. COMBINE SOMEHOW.
     mod_tlt_list = [Rules.apply_rule_near_due(t) for tlt in tlt_obj_list
                     for t in tlt['t_list']
                     if Rules.near_due_rule(t)]  # modified_tlt_objs_list
     return mod_tlt_list
 
 
-def set_due_list(tlt_obj_list):  # TODO LEARNING GIW AS list comprehension.
+def set_due_list(tlt_obj_list):
     tltdl = tlt_obj_list
     mod_list = [x for l in tltdl
                 for tl in l
@@ -125,21 +125,26 @@ class Rules():
     @staticmethod
     def apply_rule_near_due(task_rsrc):
         """
-        returns a new list of task rsrc THAT PASS Rules.near_rule().
+        returns task rsrc ONLY if it was modified: near_due and not 'needsAction '
+        MEETS there is a due that is near: i.e. REQUIES BUT DOES NOT CONFORM THIS TASK PASSED Rules.near_rule() and needed modifying.
         @type task_rsrc: dict
         @param task_rsrc that HAVE PASSED near_due rule().
 
         @return task_rsrc:  modified tasks
         """
+        # local
+        n = task_rsrc
+        ret = None  # default if no modification is needed.
         assert 'status' in task_rsrc  # "thought task rsrc always has status.
-        new_task_rsrc = n = task_rsrc.copy()
         is_completed = True if n['status'] == 'completed' else False
         if is_completed:  #
             n['status'] = 'needsAction'
             n.pop('completed')
-        if not is_completed:
+            ret = task_rsrc
+        else: # it is not completed:  # i.e. has needAction already
             n['status'] = 'completed'
-        return new_task_rsrc
+            ret = task_rsrc
+        return ret
 
     @staticmethod
     def near_due_rule(t_obj, tst_now=None):
