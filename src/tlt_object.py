@@ -100,9 +100,11 @@ def update_data_(tlt_obj_list):
      returns a list of just the modified tlts.
     """
     # ADD rules for TRIALS, IDEAS, GOALS, etc.
+    my_name = "f.update_data_"
 
-    mod_tlt_list = [[Rules.apply_rule_near_due(tlt) for tlt in tlt_obj_list
-                     if Rules.near_due_rule(tlt)]]  # modified_tlt_objs_list
+    mod_tlt_list = [Rules.apply_rule_near_due(tlt) for tlt in tlt_obj_list
+                    for t in tlt['t_list']
+                    if Rules.near_due_rule(t)]  # modified_tlt_objs_list
     return mod_tlt_list
 
 
@@ -137,7 +139,7 @@ class Rules():
         return task_rsrc
 
     @staticmethod
-    def near_due_rule(tlt_obj, tst_now=None):
+    def near_due_rule(t_obj, tst_now=None):
         """now dt is near enough to due dt.
         sets default before and after days to be near
         @type tlt_obj: dict
@@ -153,16 +155,16 @@ class Rules():
         after_near = -2
         ret = False
         # PREDICATE
-        if 'due' in tlt_obj:  # otherwise no rule
-            due = h.dt_from_(tlt_obj['due'])
-            now = datetime.now() if tst_now is not None else tst_now
+        if 'due' in t_obj:  # otherwise no rule
+            due = h.dt_from_(t_obj['due'])
+            now = datetime.now() if tst_now is None else tst_now
             tdel = due - now  # days to go IS POSITIVE
             ret = after_near <= tdel.days <= before_near
         return ret
 
 
 if __name__ == '__main__':
-    tlts_list = update_shelve()
+    tlts_list = update_shelve(True)
     pass
 
     # add a some super test or print function here.

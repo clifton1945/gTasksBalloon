@@ -211,19 +211,8 @@ class ServerTltTests(unittest.TestCase):
         my_name = "ServerTltTests.setUp." + self._testMethodName
 
         # data
-        tlt_obj_list = h.unshelve_from_db()
-        tlt_obj = {}
-        assert h.is_valid_tlt_list_(tlt_obj_list, do_print, my_name)
-        self.tlt_obj_list = tlt_obj_list
-        l = len(tlt_obj_list)
-        if l > 0:
-            assert h.is_valid_tlt_(tlt_obj_list[0], do_print, my_name)
-            tlt_obj = tlt_obj_list[0]
-        if l > 1:
-            assert tlt_obj_list[1] != tlt_obj
-        # test data
-        self.tlt_obj_list = tlt_obj_list
-        self.tlt_obj = tlt_obj
+        self.tlt_obj_list = tlt_obj_list = tlt.serve_data()
+        h.is_valid_tlt_list_(tlt_obj_list, do_print, my_name)
 
         _now = datetime.now()
         # set 3 days before now
@@ -253,9 +242,20 @@ class ServerTltTests(unittest.TestCase):
         # list of tasklists
         self.assertTrue(h.is_valid_tlt_list_(tlt_obj_list, do_print, my_name))
 
+    #@unittest.skip("skip: test_update_data_()  till base is stable.")
+    def test_update_data_(self):
+        cut = tlt.update_data_
+        # locals
+        do_print = False
+        msg = self._testMethodName
+        data = self.tlt_obj_list
+        exp = cut(data)
+
+        tst = h.is_valid_tlt_list_(data, do_print, msg)
+
 
 if __name__ == '__main__':
-    tlt_list = tlt.update_shelve()
+    tlt_list = tlt.update_shelve(True)
     print '************* UPDATED SHELVE *********'
 
     # unittest.main()

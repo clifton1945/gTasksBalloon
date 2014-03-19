@@ -3,8 +3,8 @@
 
 import unittest
 import datetime
-import task_model as model
-import task_helpers as helper
+# import task_model as model
+import src.task_helpers as helper
 
 
 class TaskModelUpdatingTEST(unittest.TestCase):
