@@ -15,7 +15,7 @@
 #      any redundant looping wil lbe trivial part of performance
 
 
-from datetime import datetime
+from datetime import datetime, timedelta
 import task_helpers as h
 import server
 
@@ -125,19 +125,21 @@ class Rules():
     @staticmethod
     def apply_rule_near_due(task_rsrc):
         """
-        modifies task rsrc THAT PASS Rules.near_rule().
+        returns a new list of task rsrc THAT PASS Rules.near_rule().
         @type task_rsrc: dict
         @param task_rsrc that HAVE PASSED near_due rule().
+
         @return task_rsrc:  modified tasks
         """
         assert 'status' in task_rsrc  # "thought task rsrc always has status.
-        is_completed = True if task_rsrc['status'] == 'completed' else False
+        new_task_rsrc = n = task_rsrc.copy()
+        is_completed = True if n['status'] == 'completed' else False
         if is_completed:  #
-            task_rsrc['status'] = 'needsAction'
-            task_rsrc.pop('completed')
+            n['status'] = 'needsAction'
+            n.pop('completed')
         if not is_completed:
-            task_rsrc['status'] = 'completed'
-        return task_rsrc
+            n['status'] = 'completed'
+        return new_task_rsrc
 
     @staticmethod
     def near_due_rule(t_obj, tst_now=None):
@@ -152,15 +154,18 @@ class Rules():
         @return True if near enough to due date.
         """
         #locals
-        before_near = 2   # refact to class attribute
-        after_near = -2
+        before_near = 2  # now <= due -> days before due
+        after_near = 2   # refact to class attribute
         ret = False
         # PREDICATE
         if 'due' in t_obj:  # otherwise no rule
             due = h.dt_from_(t_obj['due'])
             now = datetime.now() if tst_now is None else tst_now
-            tdel = due - now  # days to go IS POSITIVE
-            ret = after_near <= tdel.days <= before_near
+
+            if now >= due:  # delta is days AFTER due
+                ret = (now - due) < timedelta(after_near)   # days to go ALWAYS IS POSITIVE
+            else:           # now <= due delta is days before due
+                ret = (due - now) < timedelta(before_near)   # days to go ALWAYS IS POSITIVE
         return ret
 
 
