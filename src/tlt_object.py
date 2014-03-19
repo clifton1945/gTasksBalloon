@@ -83,11 +83,10 @@ def serve_data():
     return tlt_obj_list
 
 
-def update_shelve():
+def update_shelve(do_print=False):
     """
     selves server data -> list of tlt objects..
     """
-    do_print = False
     my_name = "f.update_shelve"
 
     tlt_obj_list = h.shelve_to_db(serve_data())
@@ -165,6 +164,7 @@ class Rules():
 if __name__ == '__main__':
     tlts_list = update_shelve()
     pass
+
     # add a some super test or print function here.
 
     # @staticmethod
