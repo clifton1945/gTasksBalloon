@@ -102,7 +102,7 @@ def update_data_(tlt_obj_list):
     # ADD rules for TRIALS, IDEAS, GOALS, etc.
     my_name = "f.update_data_"
 
-    mod_tlt_list = [Rules.apply_rule_near_due(tlt) for tlt in tlt_obj_list
+    mod_tlt_list = [Rules.apply_rule_near_due(t) for tlt in tlt_obj_list
                     for t in tlt['t_list']
                     if Rules.near_due_rule(t)]  # modified_tlt_objs_list
     return mod_tlt_list
@@ -130,6 +130,7 @@ class Rules():
         @param task_rsrc that HAVE PASSED near_due rule().
         @return task_rsrc:  modified tasks
         """
+        assert 'status' in task_rsrc  # "thought task rsrc always has status.
         is_completed = True if task_rsrc['status'] == 'completed' else False
         if is_completed:  #
             task_rsrc['status'] = 'needsAction'
