@@ -1,10 +1,11 @@
-import presenter_TESTS
+import test_presenter
 
 __author__ = 'CLIF'
 
 import unittest
 import test_server
-import tlt_object_tests
+import test_tlt_objects
+import test_rules
 
 
 class ProjectTests(unittest.TestCase):
@@ -14,8 +15,9 @@ class ProjectTests(unittest.TestCase):
 loader = unittest.TestLoader()
 
 suite = loader.loadTestsFromModule(test_server)
-suite.addTests(loader.loadTestsFromModule(tlt_object_tests))
-suite.addTests(loader.loadTestsFromModule(presenter_TESTS))
+suite.addTests(loader.loadTestsFromModule(test_rules))
+suite.addTests(loader.loadTestsFromModule(test_tlt_objects))
+suite.addTests(loader.loadTestsFromModule(test_presenter))
 
 runner = unittest.TextTestRunner(verbosity=1)
 result = runner.run(suite)
