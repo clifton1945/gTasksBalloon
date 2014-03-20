@@ -98,26 +98,13 @@ def update_data_(tlt_obj_list):
     """
      modifies each tlt with update_rules which are a function of (tasklist_ type).
      returns a list of just the modified tlts.
+     @param tlt_obj_list: list
+     @return: modified tlt_obj_list
     """
     # ADD rules for TRIALS, IDEAS, GOALS, etc.
-    my_name = "f.update_data_"
-    # TODO FIX  the mod list MUST MEET two requirements: near due AND requires a change. COMBINE SOMEHOW.
-    mod_tlt_list = [Rules.apply_rule_near_due(t) for tlt in tlt_obj_list
-                    for t in tlt['t_list']
-                    if Rules.near_due_rule(t)]  # modified_tlt_objs_list
-    return mod_tlt_list
-
-
-def set_due_list(tlt_obj_list):
-    tltdl = tlt_obj_list
-    mod_list = [x for l in tltdl
-                for tl in l
-                for x in tl
-                if isinstance(x, list)]
-    return mod_list
-
-
- #### MAIN PREDICATE FUNCTIONS
+    # my_name = "f.update_data_"
+    return [Rules.apply_rule_near_due(tlt_obj['t_list'])
+            for tlt_obj in tlt_obj_list]
 
 
 # noinspection PyClassHasNoInit
@@ -133,14 +120,32 @@ class Rules():
 
         @type task_rsrc_list: dict
         @ptask_rsrc_list_rsrc that HAVE PASSED near_due rule().
-
-        @return task_rsrc:  modified tasks
+        @return: modified_tasks_list
+        @rtype:  list
         """
         #local
 
-        ret = [Rules.update_this_(task_rsrc) for tl, lot in task_rsrc_list for task_rsrc in lot
+        modified_tasks_list = [Rules.update_this_(task_rsrc) for tl, lot in task_rsrc_list for task_rsrc in lot
                if Rules.need_to_modify_this_(task_rsrc)]
 
+        return modified_tasks_list
+
+    @staticmethod
+    def update_this_(task_rsrc):
+        """
+
+        """
+        # local
+        n = task_rsrc
+        is_completed = True if n['status'] == 'completed' else False
+
+        if is_completed:  #
+            n['status'] = 'needsAction'
+            n.pop('completed')
+            ret = task_rsrc
+        else:  # it is not completed:  # i.e. has needAction already
+            n['status'] = 'completed'
+            ret = task_rsrc
         return ret
 
     @staticmethod
@@ -168,23 +173,6 @@ class Rules():
                 need_to_modify_this = True
         return need_to_modify_this
 
-    @staticmethod
-    def update_this_(task_rsrc):
-        """
-
-        """
-        # local
-        n = task_rsrc
-        is_completed = True if n['status'] == 'completed' else False
-
-        if is_completed:  #
-            n['status'] = 'needsAction'
-            n.pop('completed')
-            ret = task_rsrc
-        else:  # it is not completed:  # i.e. has needAction already
-            n['status'] = 'completed'
-            ret = task_rsrc
-        return ret
 
     @staticmethod
     def near_due_rule(t_obj, tst_now=None):
@@ -192,7 +180,7 @@ class Rules():
         sets default before and after days to be near
         @param: t_obj
         @type t_obj: dict
-        @param tst_now : datetime  for testing
+        @param tst_now: datetime  for testing
         due: datetime
         now: datetime
         @rtype: bool
