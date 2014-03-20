@@ -242,9 +242,9 @@ class ServerTltTests(unittest.TestCase):
         tlt_obj_list = cut()
 
         # list of tasklists
-        self.assertTrue(h.is_valid_tlt_list_(tlt_obj_list, do_print, my_name))
+        self.assertTrue(h.is_valid_tlt_list_(tlt_obj_list, do_print, my_name), "exp valid list of tlt objects.")
 
-    @unittest.skip("skip: test_update_data_()  until we nee to keep hitting the server.")
+    @unittest.skip("skip: test_update_data_()  until we need to keep hitting the server.")
     def test_update_data_(self):
         cut = tlt.update_data_
         # locals
@@ -260,4 +260,4 @@ if __name__ == '__main__':
     tlt_list = tlt.update_shelve(True)
     print '************* UPDATED SHELVE *********'
 
-    # unittest.main()
+    unittest.main()
