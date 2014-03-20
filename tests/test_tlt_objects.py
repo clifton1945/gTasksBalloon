@@ -1,79 +1,11 @@
 import unittest
-from datetime import datetime
+# from datetime import datetime
 import src.tlt_object as tlt
 import src.task_helpers as h
 
 
 ### GLOBALS
-import tlt_object
-
-
-class FunctionTests(unittest.TestCase):
-    def setUp(self):
-        """
-        tl_rsrc: tasklist rsrc
-        {
-          "kind": "tasks#taskList",
-          "id": string,
-          "etag": string,
-          "title": string,
-          "updated": datetime,
-          "selfLink": string
-        }
-        t_list: task rsrc
-        {
-          "kind": "tasks#task",
-          "id": string,
-          "etag": etag,
-          "title": string,
-          "updated": datetime,
-          "selfLink": string,
-          "parent": string,
-          "position": string,
-          "notes": string,
-          "status": string,
-          "due": datetime,
-          "completed": datetime,
-          "deleted": boolean,
-          "hidden": boolean,
-          "links": [
-            {
-              "type": string,
-              "description": string,
-              "link": string
-            }
-          ]
-        }
-
-        """
-        # locals
-        # noinspection PyPep8Naming,PyPep8Naming
-        self.longMessage = True
-        do_print = False
-        my_name = self._testMethodName
-
-        _now = datetime.now()
-        # set 3 days before now
-        self.mock_now = _now
-        _day = (_now.day + 3) % 28
-        _due = _now.replace(day=_day)
-        _due_str = h.rfc_from_(_due)
-        self.mock_due_str = _due_str
-        # tlt dictionary
-        self.mock_tl_rsrc = tl_rsrc = {
-            "kind": "tasks#taskList",
-            "id": "id here",
-            "etag": "etag here.",
-            "title": "PILOTS",
-        }
-        self.mock_task_hide = t_list = {
-            "title": "mock_needsAction",
-            "status": "needsAction",
-            "due": self.mock_due_str,
-            "notes": "a mock task."}
-
-        self.mock_tlt_obj = {"tl_rsrc": tl_rsrc, "t_list": t_list}
-        self.mock_tlt_obj_list = [self.mock_tlt_obj]
+# import tlt_object
 
 
 class ShelvedTltTests(unittest.TestCase):
@@ -132,13 +64,6 @@ class ShelvedTltTests(unittest.TestCase):
             assert tlt_obj_list[1] != tlt_obj
         self.tlt_obj_list = tlt_obj_list
         self.tlt_obj = tlt_obj
-
-        _now = datetime.now()
-        # set 3 days before now
-        self.mock_now = _now
-        _day = (_now.day + 3) % 28
-        _due = _now.replace(day=_day)
-        _due_str = h.rfc_from_(_due)
 
     def test_data_valid(self):
         """
@@ -218,13 +143,9 @@ class ServerTltTests(unittest.TestCase):
         # data
         self.tlt_obj_list = tlt_obj_list = tlt.serve_data()
         h.is_valid_tlt_list_(tlt_obj_list, do_print, my_name)
-
-        _now = datetime.now()
-        # set 3 days before now
-        self.mock_now = _now
-        _day = (_now.day + 3) % 28
-        _due = _now.replace(day=_day)
-        _due_str = h.rfc_from_(_due)
+        # filter data to just run test on non essential stuff
+        self.tlt_test_list = [tlt_obj for tlt_obj in tlt_obj_list
+                              if tlt_obj["tl_rsrc"]['title'] == "PILOTS"]
 
     @unittest.skip("SKIP: unless shelve data is corrupt.")
     def test_serve_data(self):
@@ -247,16 +168,24 @@ class ServerTltTests(unittest.TestCase):
         # list of tasklists
         self.assertTrue(h.is_valid_tlt_list_(tlt_obj_list, do_print, my_name), "exp valid list of tlt objects.")
 
-    @unittest.skip("skip: test_update_data_()  until we need to keep hitting the server.")
-    def test_update_data_(self):
-        cut = tlt.update_data_
+    def test_update_server(self):
+        """
+        just PILOTS list for now
+        """
+        cut = tlt.update_server
         # locals
         do_print = False
-        msg = self._testMethodName
-        data = self.tlt_obj_list
-        exp = cut(data)
+        msg = self._testMethodName + ".PILOTS list."
+        # data as received
+        data = self.tlt_test_list  # just PILOTS list for now
+        h.print_t_list_(data[0]["t_list"], self._testMethodName + ".base")
 
-        tst = h.is_valid_tlt_list_(data, do_print, msg)
+        mod = tlt.update_data_(data)
+        exp = cut(mod)
+
+        # as modified
+        self.assertTrue(h.is_valid_tlt_list_(exp, do_print, msg), "modified still valid list.")
+        h.print_t_list_(exp[0]['t_list'], self._testMethodName + ".updated.")
 
 
 if __name__ == '__main__':

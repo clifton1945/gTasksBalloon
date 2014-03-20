@@ -1,7 +1,7 @@
 # 'tlt_object.py' in 'gTasksBalloon'
 # GIW  WORKING update_data() for apply rule near due
 # stable 3 tests
-#   version 4.9.5 GIW  using a dict tlt_obj: {tasklist rsrc, list of task rsrcs}
+#   version 4.9.6 GIW  using a dict tlt_obj: {tasklist rsrc, list of task rsrcs}
 #   '3/20/14'
 #
 # Model:
@@ -105,9 +105,30 @@ def update_data_(tlt_obj_list):
     # my_name = "f.update_data_"
     t_list = [Rules.apply_rule_near_due(tlt_obj['t_list'])
               for tlt_obj in tlt_obj_list]
+
     tl_list = [tlt_obj['tl_rsrc'] for tlt_obj in tlt_obj_list]
     tlt_mod_list = [{'tl_rsrc':tl_rsrc, 't_list': t_list} for tl_rsrc, t_list in zip(tl_list, t_list)]
     return tlt_mod_list
+
+
+def update_server(tlt_obj_list):
+    # locals
+    list_of_rsps = []
+    for tlt_obj in tlt_obj_list:
+        for task_obj in tlt_obj['t_list']:
+            #try
+            rsp = GBL_SERVICE.tasks().update(
+                tasklist=tlt_obj['tl_rsrc']['id'],
+                task=task_obj['id'],
+                body=task_obj
+                ).execute()
+            list_of_rsps.append(rsp)
+
+    #rebuild tlt_obj_list now tlt_rsp_list
+    tl_list = [tlt_obj['tl_rsrc'] for tlt_obj in tlt_obj_list]
+    tlt_rsp_list = [{'tl_rsrc': tl_rsrc, 't_list': list_of_rsps}
+                    for tl_rsrc, t_list in zip(tl_list, list_of_rsps)]
+    return tlt_rsp_list
 
 
 # noinspection PyClassHasNoInit
