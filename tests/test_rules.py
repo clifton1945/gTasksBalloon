@@ -70,8 +70,7 @@ class TestRules(TestCase):
         # test specific task
         exp = [t for t in mod_t_list if t['title'] == 'mock-3'][0]['status']
         self.assertEqual(exp, 'completed', "exp: default mock-3 modified to show completed.")
-        self.assertNotIn(mock1, mod_t_list, "exp: mock1 not included as modified.")
-        self.assertIn(mock_2, mod_t_list, "exp: mock_2 is included as modified.")
+        self.assertNotIn(mock_2, mod_t_list, "exp: mock_2 is included as modified.")
 
 
 
