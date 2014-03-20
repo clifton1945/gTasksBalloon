@@ -1,8 +1,8 @@
 # 'tlt_object.py' in 'gTasksBalloon'
 # GIW  WORKING update_data() for apply rule near due
 # stable 3 tests
-#   version 4.9 GIW  using a dict tlt_obj: {tasklist rsrc, list of task rsrcs}
-#   '3/18/14'
+#   version 4.9.1 GIW  using a dict tlt_obj: {tasklist rsrc, list of task rsrcs}
+#   '3/20/14'
 #
 # Model:
 #   logic and rules operations for updating tasks.
@@ -125,8 +125,8 @@ class Rules():
         """
         #local
 
-        modified_tasks_list = [Rules.update_this_(task_rsrc) for tl, lot in task_rsrc_list for task_rsrc in lot
-               if Rules.need_to_modify_this_(task_rsrc)]
+        modified_tasks_list = [Rules.update_this_(task_rsrc) for task_rsrc in task_rsrc_list
+                               if Rules.need_to_modify_this_(task_rsrc)]
 
         return modified_tasks_list
 
@@ -137,7 +137,7 @@ class Rules():
         """
         # local
         n = task_rsrc
-        is_completed = True if n['status'] == 'completed' else False
+        is_completed = True if task_rsrc['status'] == 'completed' else False
 
         if is_completed:  #
             n['status'] = 'needsAction'
@@ -187,8 +187,8 @@ class Rules():
         @return True if near enough to due date.
         """
         #locals
-        before_near = 2  # now <= due -> days before due
-        after_near = 2   # refact to class attribute
+        after_near = 2.01   # refact to class attribute
+        before_near = 2.01  # now <= due -> days before due
         ret = False
         # PREDICATE
         if 'due' in t_obj:  # otherwise no rule
@@ -198,7 +198,7 @@ class Rules():
             if now >= due:  # delta is days AFTER due
                 ret = (now - due) < timedelta(after_near)   # days to go ALWAYS IS POSITIVE
             else:           # now <= due delta is days before due
-                ret = (due - now) < timedelta(before_near)   # days to go ALWAYS IS POSITIVE
+                ret = (due - now) <= timedelta(before_near)   # days to go ALWAYS IS POSITIVE
         return ret
 
 

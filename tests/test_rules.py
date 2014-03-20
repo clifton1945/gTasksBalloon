@@ -37,32 +37,41 @@ class TestRules(TestCase):
         self.template = '  task.title[{0}] .due[{2}] status=[{1}].'
 
         def make_mock_task(delta):
+            # these are ALL VISIBLE !
             t_rsrc = t = mock_task_rsrc.copy()
             t['title'] = 'mock' + str(delta)
             t['status'] = 'needsAction'
+            t.pop('completed')
             t['due'] = h.rfc_from_(datetime.now() + timedelta(delta))
             # print(self.template.format(t['title'], t['status'], t['due']))
             return t_rsrc
 
         self.mock_tasks_list = [make_mock_task(_due_dt) for _due_dt in deltas]  # NOT tlt list
 
-    def test_updating_data_(self):
+    def test_apply_rule_near_due(self):
+        cut = tlt.Rules.apply_rule_near_due
         # data
         bas_t_list = self.mock_tasks_list
+        mock_2 = [t for t in bas_t_list if t['title'] == 'mock-2'][0]
+        mock1 = [t for t in bas_t_list if t['title'] == 'mock1'][0]
+
         print "base list"
         for bas in bas_t_list:
             print(self.template.format(bas['title'], bas['status'], bas['due']))
 
-        # cut = tlt.Rules.apply_rule_near_due
-        # cut = tlt.Rules.near_due_rule
-        mod_t_list = [tlt.Rules.apply_rule_near_due(t) for t in bas_t_list
-                      if tlt.Rules.near_due_rule(t)]  # modified_t_rsrcs_list
+        #  PREDICATE
+        mod_t_list = cut(bas_t_list)
 
         print "modified list"
         for mod in mod_t_list:
             print(self.template.format(mod['title'], mod['status'], mod['due']))
 
         # visual compare
-        pass
+        # test specific task
+        exp = [t for t in mod_t_list if t['title'] == 'mock-3'][0]['status']
+        self.assertEqual(exp, 'completed', "exp: default mock-3 modified to show completed.")
+        self.assertNotIn(mock1, mod_t_list, "exp: mock1 not included as modified.")
+        self.assertIn(mock_2, mod_t_list, "exp: mock_2 is included as modified.")
+
 
 
