@@ -11,9 +11,9 @@ FILTER_TRIALS = 'TRIALS'
 FILTER_FACETS = 'FACETS'
 
 ################ HELPER FUNCTIONS #################
+
+
 ###########  Tasklist Task [tlt] Testing #############
-
-
 def is_valid_tlt_(tlt_obj, do_print=False, test_name=None):
     do_print = do_print and True
     my_name = "is_valid_tlt_"
@@ -33,7 +33,7 @@ def is_valid_tlt_list_(tlt_obj_list, do_print=False, test_name=None):
     my_name = "is_valid_tlt_list_"
     full_name = ("   ." + my_name) if test_name is None else (test_name + "." + my_name)
     if do_print:
-        print_tlt_list_(tlt_obj_list, "\n" + full_name)
+        print_summary_ttl_list_(tlt_obj_list, "\n" + full_name)
 
     ret = isinstance(tlt_obj_list, list)  # expect a tlt_obj_list ")
 
@@ -47,27 +47,49 @@ def is_valid_tlt_list_(tlt_obj_list, do_print=False, test_name=None):
     return ret
 
 
-def print_tlt_list_(tlt_list, test_name=None):
+  ############ Tasklist Printing ##################
+
+
+def print_summary_ttl_list_(tlt_list, test_name=None):
     # noinspection PyProtectedMember
     print "{}->\n  " \
         "tlt list has {} tlt objects.". \
         format(test_name, len(tlt_list))
 
 
-def print_t_list_(tlt_list, test_name=None):
-    # noinspection PyProtectedMember
-    print "{}->\n  " \
-        "t list has {} t objects.". \
-        format(test_name, len(tlt_list))
-
-
 def print_tlt_(tlt_obj, test_name=None):
     # noinspection PyProtectedMember
     print "{}->\n    " \
-        "one tlt object has tl_rsrc[title]:{}, and a task list of {} task rsrcs.". \
+        "one tlt object has tl_rsrc[title]:{}, " \
+        "and a task list of {} task rsrcs.". \
         format(test_name, tlt_obj['tl_rsrc']['title'], len(tlt_obj['t_list']))
 
 
+def print_summary_t_list_(t_list, test_name=None):
+    # noinspection PyProtectedMember
+    print "{}->\n  " \
+        "t list has {} t objects.". \
+        format(test_name, len(t_list))
+
+
+def print_t_list_(t_list, test_name=None):
+    # noinspection PyProtectedMember
+    print "{}->\n  " \
+        "t list has {} t objects.". \
+        format(test_name, len(t_list))
+    for t in t_list:
+        print_short_(t)
+
+
+def print_short_(task_rsrc):
+    """
+
+    :type task_rsrc: dict
+    """
+    template = " task[{title}] {status}  "
+    print template.format(**task_rsrc)
+    
+    
 ###############   Data ############################
 def shelve_to_db(tlt_rsrcs_list, db_file_name=DB_FILE_NAME, db_root_name=DB_ROOT_NAME):
     """ shelves a dict of all tasks.
@@ -82,21 +104,6 @@ def shelve_to_db(tlt_rsrcs_list, db_file_name=DB_FILE_NAME, db_root_name=DB_ROOT
     db[db_root_name] = tlt_rsrcs_list
     db.close()
     return tlt_rsrcs_list
-
-
-def depr_shelve_to_db(ttl_rsrcs_dict, db_file_name=DB_FILE_NAME, db_root_name=DB_ROOT_NAME):
-    """ shelves a dict of all tasks.
-
-    @type ttl_rsrcs_dict: dict
-    @param: ttl_rsrcs_dict: <dict
-    @param db_file_name: <str> w/ default DB_FILE_NAME
-    @param db_root_name: <str> w/ default DB_ROOT_NAME
-    @return: ttl_rsrcs_dict  unchanged
-    """
-    db = shelve.open(db_file_name)
-    db[db_root_name] = ttl_rsrcs_dict
-    db.close()
-    return ttl_rsrcs_dict
 
 
 def unshelve_from_db(db_file_name=DB_FILE_NAME, db_root_name=DB_ROOT_NAME):

@@ -1,7 +1,7 @@
 # 'tlt_object.py' in 'gTasksBalloon'
 # GIW  WORKING update_data() for apply rule near due
 # stable 3 tests
-#   version 4.9.1 GIW  using a dict tlt_obj: {tasklist rsrc, list of task rsrcs}
+#   version 4.9.5 GIW  using a dict tlt_obj: {tasklist rsrc, list of task rsrcs}
 #   '3/20/14'
 #
 # Model:
@@ -99,12 +99,15 @@ def update_data_(tlt_obj_list):
      modifies each tlt with update_rules which are a function of (tasklist_ type).
      returns a list of just the modified tlts.
      @param tlt_obj_list: list
-     @return: modified tlt_obj_list
+     @return: modified tlt_mod_list
     """
     # ADD rules for TRIALS, IDEAS, GOALS, etc.
     # my_name = "f.update_data_"
-    return [Rules.apply_rule_near_due(tlt_obj['t_list'])
-            for tlt_obj in tlt_obj_list]
+    t_list = [Rules.apply_rule_near_due(tlt_obj['t_list'])
+              for tlt_obj in tlt_obj_list]
+    tl_list = [tlt_obj['tl_rsrc'] for tlt_obj in tlt_obj_list]
+    tlt_mod_list = [{'tl_rsrc':tl_rsrc, 't_list': t_list} for tl_rsrc, t_list in zip(tl_list, t_list)]
+    return tlt_mod_list
 
 
 # noinspection PyClassHasNoInit

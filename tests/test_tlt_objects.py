@@ -5,7 +5,7 @@ import src.task_helpers as h
 
 
 ### GLOBALS
-# PILOT = tlt.Pilot
+import tlt_object
 
 
 class FunctionTests(unittest.TestCase):
@@ -162,11 +162,14 @@ class ShelvedTltTests(unittest.TestCase):
         do_print = False
         msg = self._testMethodName
         data = self.tlt_obj_list
+        h.print_t_list_(data[0]["t_list"], self._testMethodName + ".base")
+
         # as received
-        #E  TODO NEXT in test_update_data_  look at Pilot only data before and after applying cut
         exp = cut(data)
-        tst = h.is_valid_tlt_list_(data, do_print, msg)
-        # has anything changed??
+        self.assertTrue(h.is_valid_tlt_list_(exp, do_print, msg), "modified still valis list.")
+
+        h.print_t_list_(exp[0]['t_list'], self._testMethodName + ".updated.")
+        pass  # has anything changed??
 
 
 class ServerTltTests(unittest.TestCase):
