@@ -1,3 +1,5 @@
+
+
 # 'tlt_object.py' in 'gTasksBalloon'
 # GIW  WORKING update_data() for apply rule near due
 # stable 3 tests
@@ -85,11 +87,14 @@ def serve_data():
 
 def update_shelve(do_print=False):
     """
-    selves server data -> list of tlt objects..
+    selves new server data -> list of tlt objects.
+    @return: tlt_obj_list
+    @rtype: list
     """
     my_name = "f.update_shelve"
 
-    tlt_obj_list = h.shelve_to_db(serve_data())
+    tlt_obj_list = h.shelve_to_db(serve_data())  # PREDICATE
+
     assert h.is_valid_tlt_list_(tlt_obj_list, do_print, my_name)  # expect valis list of tlt objects.
     return tlt_obj_list
 
@@ -107,7 +112,7 @@ def update_data_(tlt_obj_list):
               for tlt_obj in tlt_obj_list]
 
     tl_list = [tlt_obj['tl_rsrc'] for tlt_obj in tlt_obj_list]
-    tlt_mod_list = [{'tl_rsrc':tl_rsrc, 't_list': t_list} for tl_rsrc, t_list in zip(tl_list, t_list)]
+    tlt_mod_list = [{'tl_rsrc': tl_rsrc, 't_list': t_list} for tl_rsrc, t_list in zip(tl_list, t_list)]
     return tlt_mod_list
 
 
@@ -117,6 +122,7 @@ def update_server(tlt_obj_list):
     for tlt_obj in tlt_obj_list:
         for task_obj in tlt_obj['t_list']:
             #try
+            # noinspection PyPep8
             rsp = GBL_SERVICE.tasks().update(
                 tasklist=tlt_obj['tl_rsrc']['id'],
                 task=task_obj['id'],
@@ -199,7 +205,6 @@ class Rules():
 
         return need_to_modify_this
 
-
     @staticmethod
     def near_due_rule(t_obj, tst_now=None):
         """now dt is near enough to due dt.
@@ -231,4 +236,3 @@ class Rules():
 if __name__ == '__main__':
     tlts_list = update_shelve(True)
     pass
-

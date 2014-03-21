@@ -168,7 +168,7 @@ class ServerTltTests(unittest.TestCase):
         # list of tasklists
         self.assertTrue(h.is_valid_tlt_list_(tlt_obj_list, do_print, my_name), "exp valid list of tlt objects.")
 
-    def test_update_server(self):
+    def test_update_server_PILOTS(self):
         """
         updates SERVER after first updating_test data - in this case PILOTS -
         """
@@ -178,6 +178,28 @@ class ServerTltTests(unittest.TestCase):
         msg = self._testMethodName + ".PILOTS list."
         # data as received
         data = self.tlt_test_list  # just PILOTS list for now
+        h.print_summary_ttl_list_(data, self._testMethodName + ".BASE")
+
+        mod = tlt.update_data_(data)    # TEST DATA
+        exp = cut(mod)
+
+        # as modified
+        self.assertTrue(h.is_valid_tlt_list_(exp, do_print, msg), "modified still valid list.")
+
+        h.print_summary_ttl_list_(exp, self._testMethodName + ".MODIFIED.")
+
+    def test_update_server(self):
+        """
+        updates SERVER after first updating_data() ALL DATA
+        """
+        cut = tlt.update_server
+        # locals
+        do_print = False
+        msg = self._testMethodName + ".ALL lists"
+
+        data = self.tlt_obj_list  # data as received from server
+        tlt.update_shelve()
+        # shelve in case
         h.print_summary_ttl_list_(data, self._testMethodName + ".BASE")
 
         mod = tlt.update_data_(data)    # TEST DATA

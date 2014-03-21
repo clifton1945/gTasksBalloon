@@ -30,6 +30,15 @@ mock_task_rsrc = {
 }
 
 
+def x():
+    """
+     something in here.
+    """
+    # dfghjkl;'
+    # dfghjkl;
+    pass
+
+
 class TestRules(TestCase):
     def setUp(self):
         # build test tasks both in and out of near_due rule:
