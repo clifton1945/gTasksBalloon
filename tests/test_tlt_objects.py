@@ -53,6 +53,7 @@ class ShelvedTltTests(unittest.TestCase):
 
         # data
         tlt_obj_list = h.unshelve_from_db()
+        # elaborate way to get ->
         tlt_obj = {}
         assert h.is_valid_tlt_list_(tlt_obj_list, do_print, my_name)
         self.tlt_obj_list = tlt_obj_list
@@ -62,6 +63,8 @@ class ShelvedTltTests(unittest.TestCase):
             tlt_obj = tlt_obj_list[0]
         if l > 1:
             assert tlt_obj_list[1] != tlt_obj
+
+        # THIS
         self.tlt_obj_list = tlt_obj_list
         self.tlt_obj = tlt_obj
 
@@ -85,17 +88,20 @@ class ShelvedTltTests(unittest.TestCase):
         cut = tlt.update_data_
         # locals
         do_print = False
-        msg = self._testMethodName
-        data = self.tlt_obj_list
-        h.print_t_list_(data[0]["t_list"], self._testMethodName + ".base")
+        msg = self._testMethodName + ".ALL lists"
 
-        # as received
-        exp = cut(data)
-        self.assertTrue(h.is_valid_tlt_list_(exp, do_print, msg), "modified still valis list.")
+        # data = self.tlt_obj_list  # data as received from server
+        data = self.tlt_obj_list  # data as received from server
 
-        h.print_t_list_(exp[0]['t_list'], self._testMethodName + ".updated.")
-        pass  # has anything changed??
+        h.print_summary_ttl_list_(data, self._testMethodName + ".BASE")
 
+        mod = tlt.update_data_(data)    # MAIN PREDICATE
+        exp = cut(mod)
+
+        # as modified
+        self.assertTrue(h.is_valid_tlt_list_(exp, do_print, msg), "modified still valid list.")
+
+        h.print_summary_ttl_list_(exp, self._testMethodName + ".MODIFIED.")
 
 class ServerTltTests(unittest.TestCase):
     def setUp(self):
@@ -198,7 +204,9 @@ class ServerTltTests(unittest.TestCase):
         do_print = False
         msg = self._testMethodName + ".ALL lists"
 
+        # data = self.tlt_obj_list  # data as received from server
         data = self.tlt_obj_list  # data as received from server
+
         tlt.update_shelve()
         # shelve in case
         h.print_summary_ttl_list_(data, self._testMethodName + ".BASE")

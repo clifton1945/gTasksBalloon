@@ -110,7 +110,7 @@ def update_data_(tlt_obj_list):
     # my_name = "f.update_data_"
     t_list = [Rules.apply_rule_near_due(tlt_obj['t_list'])
               for tlt_obj in tlt_obj_list]
-
+    # GLUE t_list to appropriate tl_rsrc.
     tl_list = [tlt_obj['tl_rsrc'] for tlt_obj in tlt_obj_list]
     tlt_mod_list = [{'tl_rsrc': tl_rsrc, 't_list': t_list} for tl_rsrc, t_list in zip(tl_list, t_list)]
     return tlt_mod_list

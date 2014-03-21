@@ -60,7 +60,7 @@ def print_summary_ttl_list_(tlt_list, test_name=None):
 
 def print_tlt_(tlt_obj, test_name=None):
     # noinspection PyProtectedMember
-    print "{}->\n    " \
+    print "{}    " \
         "one tlt_obj has tl_rsrc[title]:{}, " \
         "and a task list of {} task rsrcs.". \
         format(test_name, tlt_obj['tl_rsrc']['title'], len(tlt_obj['t_list']))
