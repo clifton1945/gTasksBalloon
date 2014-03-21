@@ -178,14 +178,15 @@ class ServerTltTests(unittest.TestCase):
         msg = self._testMethodName + ".PILOTS list."
         # data as received
         data = self.tlt_test_list  # just PILOTS list for now
-        h.print_t_list_(data[0]["t_list"], self._testMethodName + ".base")
+        h.print_summary_ttl_list_(data, self._testMethodName + ".BASE")
 
         mod = tlt.update_data_(data)    # TEST DATA
         exp = cut(mod)
 
         # as modified
         self.assertTrue(h.is_valid_tlt_list_(exp, do_print, msg), "modified still valid list.")
-        h.print_t_list_(exp[0]['t_list'], self._testMethodName + ".updated.")
+
+        h.print_summary_ttl_list_(exp, self._testMethodName + ".MODIFIED.")
 
 
 if __name__ == '__main__':

@@ -52,15 +52,16 @@ def is_valid_tlt_list_(tlt_obj_list, do_print=False, test_name=None):
 
 def print_summary_ttl_list_(tlt_list, test_name=None):
     # noinspection PyProtectedMember
-    print "{}->\n  " \
-        "tlt list has {} tlt objects.". \
+    print "\n{}->\n  " \
+        "tlt list has {} tlt_obj.". \
         format(test_name, len(tlt_list))
+    [print_tlt_(tlt, "...") for tlt in tlt_list]
 
 
 def print_tlt_(tlt_obj, test_name=None):
     # noinspection PyProtectedMember
     print "{}->\n    " \
-        "one tlt object has tl_rsrc[title]:{}, " \
+        "one tlt_obj has tl_rsrc[title]:{}, " \
         "and a task list of {} task rsrcs.". \
         format(test_name, tlt_obj['tl_rsrc']['title'], len(tlt_obj['t_list']))
 
@@ -68,14 +69,14 @@ def print_tlt_(tlt_obj, test_name=None):
 def print_summary_t_list_(t_list, test_name=None):
     # noinspection PyProtectedMember
     print "{}->\n  " \
-        "t list has {} t objects.". \
+        "t list has {} t_obj.". \
         format(test_name, len(t_list))
 
 
 def print_t_list_(t_list, test_name=None):
     # noinspection PyProtectedMember
     print "{}->\n  " \
-        "t list has {} t objects.". \
+        "t_obj list is len{}.". \
         format(test_name, len(t_list))
     for t in t_list:
         print_short_(t)

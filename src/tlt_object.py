@@ -1,8 +1,8 @@
 # 'tlt_object.py' in 'gTasksBalloon'
 # GIW  WORKING update_data() for apply rule near due
 # stable 3 tests
-#   version 4.9.6 GIW  using a dict tlt_obj: {tasklist rsrc, list of task rsrcs}
-#   '3/20/14'
+#   version 4.9.7 GIWr
+#   '3/21/14'
 #
 # Model:
 #   logic and rules operations for updating tasks.
