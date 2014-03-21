@@ -168,6 +168,7 @@ class ServerTltTests(unittest.TestCase):
         # list of tasklists
         self.assertTrue(h.is_valid_tlt_list_(tlt_obj_list, do_print, my_name), "exp valid list of tlt objects.")
 
+    # noinspection PyPep8Naming
     def test_update_server_PILOTS(self):
         """
         updates SERVER after first updating_test data - in this case PILOTS -
