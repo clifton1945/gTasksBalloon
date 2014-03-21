@@ -140,10 +140,10 @@ class ServerTltTests(unittest.TestCase):
         do_print = False
         my_name = "ServerTltTests.setUp." + self._testMethodName
 
-        # data
+        # SERVER DATA ---
         self.tlt_obj_list = tlt_obj_list = tlt.serve_data()
         h.is_valid_tlt_list_(tlt_obj_list, do_print, my_name)
-        # filter data to just run test on non essential stuff
+        # TEST DATA --- filter data to just run test on non essential stuff
         self.tlt_test_list = [tlt_obj for tlt_obj in tlt_obj_list
                               if tlt_obj["tl_rsrc"]['title'] == "PILOTS"]
 
@@ -170,7 +170,7 @@ class ServerTltTests(unittest.TestCase):
 
     def test_update_server(self):
         """
-        just PILOTS list for now
+        updates SERVER after first updating_test data - in this case PILOTS -
         """
         cut = tlt.update_server
         # locals
@@ -180,7 +180,7 @@ class ServerTltTests(unittest.TestCase):
         data = self.tlt_test_list  # just PILOTS list for now
         h.print_t_list_(data[0]["t_list"], self._testMethodName + ".base")
 
-        mod = tlt.update_data_(data)
+        mod = tlt.update_data_(data)    # TEST DATA
         exp = cut(mod)
 
         # as modified

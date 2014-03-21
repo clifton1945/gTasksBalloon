@@ -183,18 +183,20 @@ class Rules():
             (1) 'status'='complete'
 
         """
-        # locals
-        task_is_near_due = Rules.near_due_rule(task_rsrc)
-        task_is_visible = (task_rsrc['status'] == 'needsAction') and 'completed' not in task_rsrc
-        task_is_not_visible = (task_rsrc['status'] == 'completed')
         need_to_modify_this = False
-        #PREDICATE
-        if task_is_near_due:
-            if task_is_not_visible:
-                need_to_modify_this = True
-        else:  # task is NOT near_due
-            if task_is_visible:
-                need_to_modify_this = True
+        if 'due' in task_rsrc:
+            # locals
+            task_is_near_due = Rules.near_due_rule(task_rsrc)
+            task_is_visible = (task_rsrc['status'] == 'needsAction') and 'completed' not in task_rsrc
+            task_is_not_visible = (task_rsrc['status'] == 'completed')
+            #PREDICATE
+            if task_is_near_due:
+                if task_is_not_visible:
+                    need_to_modify_this = True
+            else:  # task is NOT near_due
+                if task_is_visible:
+                    need_to_modify_this = True
+
         return need_to_modify_this
 
 
