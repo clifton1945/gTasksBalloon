@@ -108,11 +108,9 @@ def update_data_(tlt_obj_list):
     """
     # ADD rules for TRIALS, IDEAS, GOALS, etc.
     # my_name = "f.update_data_"
-    t_list = [Rules.apply_rule_near_due(tlt_obj['t_list'])
-              for tlt_obj in tlt_obj_list]
-    # GLUE t_list to appropriate tl_rsrc.
-    tl_list = [tlt_obj['tl_rsrc'] for tlt_obj in tlt_obj_list]
-    tlt_mod_list = [{'tl_rsrc': tl_rsrc, 't_list': t_list} for tl_rsrc, t_list in zip(tl_list, t_list)]
+    tlt_mod_list = [Rules.apply_rule_near_due(tlt_obj)
+                    for tlt_obj in tlt_obj_list
+                    if Rules.need_to_modify_this_(tlt_obj)]
     return tlt_mod_list
 
 
@@ -155,7 +153,8 @@ class Rules():
         """
         #local
 
-        modified_tasks_list = [Rules.update_this_(task_rsrc) for task_rsrc in task_rsrc_list
+        modified_tasks_list = [Rules.update_this_(task_rsrc)
+                               for task_rsrc in task_rsrc_list
                                if Rules.need_to_modify_this_(task_rsrc)]
 
         return modified_tasks_list
