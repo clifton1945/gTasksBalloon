@@ -149,6 +149,7 @@ class Rules():
         """
         #local
         is_modified = False
+        # noinspection PyUnusedLocal
         modified_tasks_list = mt_l = []
         # PREDICATE
         if 'items' in tlt_obj['t_list']:
@@ -158,7 +159,6 @@ class Rules():
             is_modified = True
             tlt_obj['items'] = mt_l
         return is_modified
-
 
     @staticmethod
     def need_to_modify_this_(t_obj):
@@ -196,25 +196,22 @@ class Rules():
 
         return need_to_modify_this
 
-
     @staticmethod
     def update_this_(t_obj):
         """
         modify the task resource obj IF
         """
         # local
-        n = t_obj
         is_completed = True if t_obj['status'] == 'completed' else False
 
         if is_completed:  #
-            n['status'] = 'needsAction'
-            n.pop('completed')
+            t_obj['status'] = 'needsAction'
+            t_obj.pop('completed')
             ret = t_obj
         else:  # it is not completed:  # i.e. has needAction already
-            n['status'] = 'completed'
+            t_obj['status'] = 'completed'
             ret = t_obj
         return ret
-
 
     @staticmethod
     def near_due_rule(t_obj, tst_now=None):
