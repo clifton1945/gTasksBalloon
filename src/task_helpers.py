@@ -48,6 +48,13 @@ def print_summary_ttl_list_(tlt_list, test_name=None):
     [print_tlt_(tlt, "...") for tlt in tlt_list]
 
 
+def print_short_ttl_list_(tlt_list, test_name=None):
+    # noinspection PyProtectedMember
+    print "\n{}->\ntlt list has {} tlt_obj.". \
+        format(test_name, len(tlt_list))
+    [print_tlt_(tlt, "...") for tlt in tlt_list]
+
+
 def print_tlt_(tlt_obj, test_name=None):
     # noinspection PyProtectedMember
     print "{}    " \

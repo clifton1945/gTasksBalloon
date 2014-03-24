@@ -152,7 +152,7 @@ class Rules():
         # noinspection PyUnusedLocal
         modified_tasks_list = mt_l = []
         # PREDICATE
-        if 'items' in tlt_obj['t_list']:
+        if len(tlt_obj['t_list']) > 0 :
             mt_l = [t_obj for t_obj in tlt_obj['t_list']
                     if Rules.need_to_modify_this_(t_obj)]
         if len(mt_l):

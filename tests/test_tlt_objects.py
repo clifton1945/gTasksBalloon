@@ -122,22 +122,16 @@ class ServerTltTests(unittest.TestCase):
         do_print = False
         my_name = "ServerTltTests.setUp." + self._testMethodName
 
-        # # CURRENT SERVER & SHELVE DATA ---
-        # self.tlt_list = _tlt_list = tlt.update_shelve()
-        # h.is_valid_tlt_list_(_tlt_list, do_print, my_name)
-        # self.tlt_pilot_list = [tlt_obj for tlt_obj in _tlt_list
-        #                        if tlt_obj["tl_rsrc"]['title'] == "PILOTS"]
-        #
     #@unittest.skip("SKIP: unless shelve data is corrupt.")
     def test_serve_data_is_valid_tlt_list_(self):
-        do_print = True
+        do_print = False
         my_name = self._testMethodName
         # noinspection PyPep8Naming
         CUT = tlt.serve_data()
         # list of tasklists
         self.assertTrue(h.is_valid_tlt_list_(CUT, do_print, my_name))
 
-    def test_update_shelve(self):
+    def test_update_shelve_seem_to_be_same(self):
         do_print = False
         my_name = self._testMethodName
         # noinspection PyPep8Naming
@@ -145,23 +139,51 @@ class ServerTltTests(unittest.TestCase):
 
         shelved_tlt_list = CUT()
         unshelved_tlt_list = h.unshelve_from_db()
-        self.assertDictEqual(unshelved_tlt_list, shelved_tlt_list,
-                             "exp unshelved and shelved are same")
+        self.assertDictEqual(unshelved_tlt_list[0], shelved_tlt_list[0],
+                             "exp unshelved[0] and shelved[0] are same")
+        l = len(shelved_tlt_list) - 1
+        self.assertDictEqual(unshelved_tlt_list[l], shelved_tlt_list[l],
+                             "exp unshelved[l] and shelved[l] are same")
+
+    # noinspection PyPep8Naming
+    def test_update_data_PILOTS(self):
+        """
+        updates SERVER.PILOTS Tasklist ONLY -
+        """
+        CUT = tlt.update_data_
+        # locals
+        do_print = True  # TODO  RESET TO FALSE AFTER TESTING
+        msg = self._testMethodName + ".PILOTS list."
+        # data as received
+        data = h.unshelve_from_db()
+        data = [d for d in data
+                if d['tl_rsrc']['title'] == 'PILOTS']
+        h.print_summary_ttl_list_(data, self._testMethodName + ".BASE")
+
+        exp = CUT(data)  # PREDICATE
+
+        # as modified
+        self.assertTrue(h.is_valid_tlt_list_(exp, do_print, msg), "modified still valid list.")
+
+        h.print_summary_ttl_list_(exp, self._testMethodName + ".MODIFIED.")
 
     # noinspection PyPep8Naming
     def test_update_server_PILOTS(self):
         """
-        updates SERVER after first updating_test data - in this case PILOTS -
+        updates SERVER.PILOTS Tasklist ONLY -
         """
         CUT = tlt.update_server
         # locals
-        do_print = False
+        do_print = True  # TODO  RESET TO FALSE AFTER TESTING
         msg = self._testMethodName + ".PILOTS list."
         # data as received
-        data = self.tlt_pilot_list  # just PILOTS list for now
+        data = h.unshelve_from_db()
+        data = [d for d in data
+                if d['tl_rsrc']['title'] == 'PILOTS']
         h.print_summary_ttl_list_(data, self._testMethodName + ".BASE")
-
-        mod = tlt.update_data_(data)    # TEST DATA
+        # FIRST modifiy the data if needed
+        mod = tlt.update_data_(data)
+        # NOW update_server()
         exp = CUT(mod)
 
         # as modified
