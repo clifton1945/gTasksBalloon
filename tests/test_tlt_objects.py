@@ -161,12 +161,12 @@ class ServerTltTests(unittest.TestCase):
         h.is_valid_tlt_list_(_tlt_list, do_print, my_name)
         
         # TEST DATA --- filter data to just run test on non essential stuff
-        self.tlt_test_list = [tlt_obj for tlt_obj in _tlt_list
+        self.tlt_pilot_list = [tlt_obj for tlt_obj in _tlt_list
                               if tlt_obj["tl_rsrc"]['title'] == "PILOTS"]
 
-    @unittest.skip("SKIP: unless shelve data is corrupt.")
+    #@unittest.skip("SKIP: unless shelve data is corrupt.")
     def test_serve_data(self):
-        do_print = False
+        do_print = True
         my_name = self._testMethodName
         # noinspection PyPep8Naming
         CUT = tlt.serve_data
@@ -197,7 +197,7 @@ class ServerTltTests(unittest.TestCase):
         do_print = True
         msg = self._testMethodName + ".PILOTS list."
         # data as received
-        data = self.tlt_test_list  # just PILOTS list for now
+        data = self.tlt_pilot_list  # just PILOTS list for now
         h.print_summary_ttl_list_(data, self._testMethodName + ".BASE")
 
         mod = tlt.update_data_(data)    # TEST DATA
