@@ -52,7 +52,11 @@ def print_short_ttl_list_(tlt_list, test_name=None):
     # noinspection PyProtectedMember
     print "\n{}->\ntlt list has {} tlt_obj.". \
         format(test_name, len(tlt_list))
-    [print_tlt_(tlt, "...") for tlt in tlt_list]
+
+    # [print_tlt_(tlt, "...") for tlt in tlt_list]
+    for tlt in tlt_list:
+        # print_tlt_(tlt, "...")
+        print_t_list_(tlt)
 
 
 def print_tlt_(tlt_obj, test_name=None):
@@ -70,22 +74,24 @@ def print_summary_t_list_(t_list, test_name=None):
         format(test_name, len(t_list))
 
 
-def print_t_list_(t_list, test_name=None):
+def print_t_list_(tlt_obj, test_name=None):
     # noinspection PyProtectedMember
-    print "{}->\n  " \
-        "t_obj list is len{}.". \
-        format(test_name, len(t_list))
-    for t in t_list:
-        print_short_(t)
+    if 'items' in tlt_obj['t_list']:
+        _t_list = tlt_obj['t_list']
+        l = len(_t_list)
+        print "{}->\n  " \
+            "t_obj list is {} long.". \
+            format(test_name, l)
+        print_tasks_in_t_list_in_(tlt_obj)
 
 
-def print_short_(task_rsrc):
+def print_tasks_in_t_list_in_(tlt_dict):
     """
-
-    :type task_rsrc: dict
+    :type tlt_dict: dict
     """
-    template = " task[{title}] {status}  "
-    print template.format(**task_rsrc)
+    template = " task:'{title}' {status}  "
+    for t_rsrc in tlt_dict['t_list']:
+        print template.format(**t_rsrc)
     
     
 ###############   Data ############################

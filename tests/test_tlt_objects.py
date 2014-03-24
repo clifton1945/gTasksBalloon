@@ -5,7 +5,6 @@ import src.task_helpers as h
 
 
 ### GLOBALS
-# import tlt_object
 
 
 class ShelvedTltTests(unittest.TestCase):
@@ -158,7 +157,7 @@ class ServerTltTests(unittest.TestCase):
         data = h.unshelve_from_db()
         data = [d for d in data
                 if d['tl_rsrc']['title'] == 'PILOTS']
-        h.print_summary_ttl_list_(data, self._testMethodName + ".BASE")
+        h.print_short_ttl_list_(data, self._testMethodName + ".BASE")
 
         exp = CUT(data)  # PREDICATE
 
