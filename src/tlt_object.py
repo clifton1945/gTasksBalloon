@@ -101,8 +101,8 @@ def update_shelve(do_print=False):
 
 def update_data_(tlt_obj_list):
     """
-     apply_rule_ some rule  to each tlt_obj. If the tlt was modified / updated
-     return a list of these tlts.
+     update_data() is the main PREDICATE of th project. Each tlt_object is subjected to a series of Rules.
+        If the rule dictates, the object is modifed, and returned to a modified_tlt_objs list.
 
      @param tlt_obj_list: list
      @return is_modified: bool

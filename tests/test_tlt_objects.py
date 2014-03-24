@@ -85,6 +85,11 @@ class ShelvedTltTests(unittest.TestCase):
 
     #@unittest.skip("skip: test_update_data_()  till base is stable.")
     def test_update_data_(self):
+        """
+        update_data in the main PREDICATE of th project. Each tlt_object is subjected to a series of Rules.
+        If the rule dictates the object is modifed, and returned to a modified_tlt_objs list.
+
+        """
         cut = tlt.update_data_
         # locals
         do_print = False
