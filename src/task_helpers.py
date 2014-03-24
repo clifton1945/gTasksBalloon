@@ -34,20 +34,10 @@ def is_valid_tlt_list_(tlt_obj_list, do_print=False, test_name=None):
     full_name = ("   ." + my_name) if test_name is None else (test_name + "." + my_name)
     if do_print:
         print_summary_ttl_list_(tlt_obj_list, "\n" + full_name)
-
-    ret = isinstance(tlt_obj_list, list)  # expect a tlt_obj_list ")
-
-    l = len(tlt_obj_list)
-    if l > 0:
-        ret = ret and is_valid_tlt_(tlt_obj_list[0], do_print, full_name)
-    if l > 1:
-        ret = ret and is_valid_tlt_(tlt_obj_list[1], do_print, full_name)
-        ret = ret and tlt_obj_list[1] != tlt_obj_list[0]
-
-    return ret
+    return isinstance(tlt_obj_list, list)  # expect a tlt_obj_list ")
 
 
-  ############ Tasklist Printing ##################
+    ############ Tasklist Printing ##################
 
 
 def print_summary_ttl_list_(tlt_list, test_name=None):

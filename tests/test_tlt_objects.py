@@ -113,43 +113,9 @@ class ShelvedTltTests(unittest.TestCase):
 class ServerTltTests(unittest.TestCase):
     def setUp(self):
         """
-        invokes tests using real, current server +data.
-        by calling update_shelve() which hs called server_data().
-        
-        tl_rsrc: tasklist rsrc
-        {
-          "kind": "tasks#taskList",
-          "id": string,
-          "etag": string,
-          "title": string,
-          "updated": datetime,
-          "selfLink": string
-        }
-        t_list: task rsrc
-        {
-          "kind": "tasks#task",
-          "id": string,
-          "etag": etag,
-          "title": string,
-          "updated": datetime,
-          "selfLink": string,
-          "parent": string,
-          "position": string,
-          "notes": string,
-          "status": string,
-          "due": datetime,
-          "completed": datetime,
-          "deleted": boolean,
-          "hidden": boolean,
-          "links": [
-            {
-              "type": string,
-              "description": string,
-              "link": string
-            }
-          ]
-        }
-
+        invokes tests using real, current server/shelve data invoked IN the test.
+        by calling update_shelve() get current server responces shelved.
+        NOTE: shelving may add time to date return.
         """
         # noinspection PyPep8Naming,PyPep8Naming
         self.longMessage = True
@@ -159,10 +125,8 @@ class ServerTltTests(unittest.TestCase):
         # CURRENT SERVER & SHELVE DATA ---
         self.tlt_list = _tlt_list = tlt.update_shelve()
         h.is_valid_tlt_list_(_tlt_list, do_print, my_name)
-        
-        # TEST DATA --- filter data to just run test on non essential stuff
         self.tlt_pilot_list = [tlt_obj for tlt_obj in _tlt_list
-                              if tlt_obj["tl_rsrc"]['title'] == "PILOTS"]
+                               if tlt_obj["tl_rsrc"]['title'] == "PILOTS"]
 
     #@unittest.skip("SKIP: unless shelve data is corrupt.")
     def test_serve_data(self):
@@ -194,7 +158,7 @@ class ServerTltTests(unittest.TestCase):
         """
         CUT = tlt.update_server
         # locals
-        do_print = True
+        do_print = False
         msg = self._testMethodName + ".PILOTS list."
         # data as received
         data = self.tlt_pilot_list  # just PILOTS list for now
