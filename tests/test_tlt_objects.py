@@ -52,20 +52,20 @@ class ShelvedTltTests(unittest.TestCase):
         my_name = "ShelvedTltTests.setUp." + self._testMethodName
 
         # data
-        tlt_obj_list = h.unshelve_from_db()
+        _tlt_list = h.unshelve_from_db()
         # elaborate way to get ->
         tlt_obj = {}
-        assert h.is_valid_tlt_list_(tlt_obj_list, do_print, my_name)
-        self.tlt_obj_list = tlt_obj_list
-        l = len(tlt_obj_list)
+        assert h.is_valid_tlt_list_(_tlt_list, do_print, my_name)
+        self._tlt_list = _tlt_list
+        l = len(_tlt_list)
         if l > 0:
-            assert h.is_valid_tlt_(tlt_obj_list[0], do_print, my_name)
-            tlt_obj = tlt_obj_list[0]
+            assert h.is_valid_tlt_(_tlt_list[0], do_print, my_name)
+            tlt_obj = _tlt_list[0]
         if l > 1:
-            assert tlt_obj_list[1] != tlt_obj
+            assert _tlt_list[1] != tlt_obj
 
         # THIS
-        self.tlt_obj_list = tlt_obj_list
+        self.tlt_list = _tlt_list
         self.tlt_obj = tlt_obj
 
     def test_data_valid(self):
@@ -78,10 +78,10 @@ class ShelvedTltTests(unittest.TestCase):
         do_print = False
         msg = self._testMethodName
 
-        tlt_obj_list = self.tlt_obj_list
+        _tlt_list = self.tlt_list
 
         # list of tasklists
-        h.is_valid_tlt_list_(tlt_obj_list, do_print, msg)
+        h.is_valid_tlt_list_(_tlt_list, do_print, msg)
 
     #@unittest.skip("skip: test_update_data_()  till base is stable.")
     def test_update_data_(self):
@@ -96,8 +96,8 @@ class ShelvedTltTests(unittest.TestCase):
         do_print = False
         msg = self._testMethodName + ".ALL lists"
 
-        # data = self.tlt_obj_list  # data as received from server
-        data = self.tlt_obj_list  # data as received from server
+        # data = self.tlt_list  # data as received from server
+        data = self.tlt_list  # data as received from server
 
         h.print_summary_ttl_list_(data, self._testMethodName + ".BASE")
 
@@ -113,6 +113,9 @@ class ShelvedTltTests(unittest.TestCase):
 class ServerTltTests(unittest.TestCase):
     def setUp(self):
         """
+        invokes tests using real, current server +data.
+        by calling update_shelve() which hs called server_data().
+        
         tl_rsrc: tasklist rsrc
         {
           "kind": "tasks#taskList",
@@ -153,11 +156,12 @@ class ServerTltTests(unittest.TestCase):
         do_print = False
         my_name = "ServerTltTests.setUp." + self._testMethodName
 
-        # SERVER DATA ---
-        self.tlt_obj_list = tlt_obj_list = tlt.serve_data()
-        h.is_valid_tlt_list_(tlt_obj_list, do_print, my_name)
+        # CURRENT SERVER & SHELVE DATA ---
+        self.tlt_list = _tlt_list = tlt.update_shelve()
+        h.is_valid_tlt_list_(_tlt_list, do_print, my_name)
+        
         # TEST DATA --- filter data to just run test on non essential stuff
-        self.tlt_test_list = [tlt_obj for tlt_obj in tlt_obj_list
+        self.tlt_test_list = [tlt_obj for tlt_obj in _tlt_list
                               if tlt_obj["tl_rsrc"]['title'] == "PILOTS"]
 
     @unittest.skip("SKIP: unless shelve data is corrupt.")
@@ -167,10 +171,10 @@ class ServerTltTests(unittest.TestCase):
         # noinspection PyPep8Naming
         CUT = tlt.serve_data
 
-        tlt_obj_list = CUT()
+        _tlt_list = CUT()
 
         # list of tasklists
-        self.assertTrue(h.is_valid_tlt_list_(tlt_obj_list, do_print, my_name))
+        self.assertTrue(h.is_valid_tlt_list_(_tlt_list, do_print, my_name))
 
     def test_update_shelve(self):
         do_print = False
@@ -178,10 +182,10 @@ class ServerTltTests(unittest.TestCase):
         # noinspection PyPep8Naming
         CUT = tlt.update_shelve
 
-        tlt_obj_list = CUT()
+        _tlt_list = CUT()
 
         # list of tasklists
-        self.assertTrue(h.is_valid_tlt_list_(tlt_obj_list, do_print, my_name), "exp valid list of tlt objects.")
+        self.assertTrue(h.is_valid_tlt_list_(_tlt_list, do_print, my_name), "exp valid list of tlt objects.")
 
     # noinspection PyPep8Naming
     def test_update_server_PILOTS(self):
@@ -190,7 +194,7 @@ class ServerTltTests(unittest.TestCase):
         """
         CUT = tlt.update_server
         # locals
-        do_print = False
+        do_print = True
         msg = self._testMethodName + ".PILOTS list."
         # data as received
         data = self.tlt_test_list  # just PILOTS list for now
@@ -214,8 +218,8 @@ class ServerTltTests(unittest.TestCase):
         do_print = False
         msg = self._testMethodName + ".ALL lists"
 
-        # data = self.tlt_obj_list  # data as received from server
-        data = self.tlt_obj_list  # data as received from server
+        # data = self.tlt_list  # data as received from server
+        data = self.tlt_list  # data as received from server
 
         tlt.update_shelve()
         # shelve in case
