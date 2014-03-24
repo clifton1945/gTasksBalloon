@@ -90,7 +90,8 @@ class ShelvedTltTests(unittest.TestCase):
         If the rule dictates the object is modifed, and returned to a modified_tlt_objs list.
 
         """
-        cut = tlt.update_data_
+        # noinspection PyPep8Naming
+        CUT = tlt.update_data_
         # locals
         do_print = False
         msg = self._testMethodName + ".ALL lists"
@@ -101,7 +102,7 @@ class ShelvedTltTests(unittest.TestCase):
         h.print_summary_ttl_list_(data, self._testMethodName + ".BASE")
 
         mod = tlt.update_data_(data)    # MAIN PREDICATE
-        exp = cut(mod)
+        exp = CUT(mod)
 
         # as modified
         self.assertTrue(h.is_valid_tlt_list_(exp, do_print, msg), "modified still valid list.")
@@ -163,9 +164,10 @@ class ServerTltTests(unittest.TestCase):
     def test_serve_data(self):
         do_print = False
         my_name = self._testMethodName
-        cut = tlt.serve_data
+        # noinspection PyPep8Naming
+        CUT = tlt.serve_data
 
-        tlt_obj_list = cut()
+        tlt_obj_list = CUT()
 
         # list of tasklists
         self.assertTrue(h.is_valid_tlt_list_(tlt_obj_list, do_print, my_name))
@@ -173,9 +175,10 @@ class ServerTltTests(unittest.TestCase):
     def test_update_shelve(self):
         do_print = False
         my_name = self._testMethodName
-        cut = tlt.update_shelve
+        # noinspection PyPep8Naming
+        CUT = tlt.update_shelve
 
-        tlt_obj_list = cut()
+        tlt_obj_list = CUT()
 
         # list of tasklists
         self.assertTrue(h.is_valid_tlt_list_(tlt_obj_list, do_print, my_name), "exp valid list of tlt objects.")
@@ -185,7 +188,7 @@ class ServerTltTests(unittest.TestCase):
         """
         updates SERVER after first updating_test data - in this case PILOTS -
         """
-        cut = tlt.update_server
+        CUT = tlt.update_server
         # locals
         do_print = False
         msg = self._testMethodName + ".PILOTS list."
@@ -194,7 +197,7 @@ class ServerTltTests(unittest.TestCase):
         h.print_summary_ttl_list_(data, self._testMethodName + ".BASE")
 
         mod = tlt.update_data_(data)    # TEST DATA
-        exp = cut(mod)
+        exp = CUT(mod)
 
         # as modified
         self.assertTrue(h.is_valid_tlt_list_(exp, do_print, msg), "modified still valid list.")
@@ -205,7 +208,8 @@ class ServerTltTests(unittest.TestCase):
         """
         updates SERVER after first updating_data() ALL DATA
         """
-        cut = tlt.update_server
+        # noinspection PyPep8Naming
+        CUT = tlt.update_server
         # locals
         do_print = False
         msg = self._testMethodName + ".ALL lists"
@@ -218,7 +222,7 @@ class ServerTltTests(unittest.TestCase):
         h.print_summary_ttl_list_(data, self._testMethodName + ".BASE")
 
         mod = tlt.update_data_(data)    # TEST DATA
-        exp = cut(mod)
+        exp = CUT(mod)
 
         # as modified
         self.assertTrue(h.is_valid_tlt_list_(exp, do_print, msg), "modified still valid list.")
