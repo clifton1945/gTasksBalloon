@@ -83,13 +83,13 @@ def print_short_(task_rsrc):
     
 ###############   Data ############################
 def shelve_to_db(tlt_rsrcs_list, db_file_name=DB_FILE_NAME, db_root_name=DB_ROOT_NAME):
-    """ shelves a dict of all tasks.
+    """ shelves A LIST tlt dicts.
 
     @type tlt_rsrcs_list: list
     @param: tlt_rsrcs_list: list
     @param db_file_name: <str> w/ default DB_FILE_NAME
     @param db_root_name: <str> w/ default DB_ROOT_NAME
-    @return: tlt_rsrcs_list  unchanged
+    @return: tlt_rsrcs_list  as received!!
     """
     db = shelve.open(db_file_name)
     db[db_root_name] = tlt_rsrcs_list

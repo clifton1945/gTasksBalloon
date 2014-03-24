@@ -122,34 +122,31 @@ class ServerTltTests(unittest.TestCase):
         do_print = False
         my_name = "ServerTltTests.setUp." + self._testMethodName
 
-        # CURRENT SERVER & SHELVE DATA ---
-        self.tlt_list = _tlt_list = tlt.update_shelve()
-        h.is_valid_tlt_list_(_tlt_list, do_print, my_name)
-        self.tlt_pilot_list = [tlt_obj for tlt_obj in _tlt_list
-                               if tlt_obj["tl_rsrc"]['title'] == "PILOTS"]
-
+        # # CURRENT SERVER & SHELVE DATA ---
+        # self.tlt_list = _tlt_list = tlt.update_shelve()
+        # h.is_valid_tlt_list_(_tlt_list, do_print, my_name)
+        # self.tlt_pilot_list = [tlt_obj for tlt_obj in _tlt_list
+        #                        if tlt_obj["tl_rsrc"]['title'] == "PILOTS"]
+        #
     #@unittest.skip("SKIP: unless shelve data is corrupt.")
-    def test_serve_data(self):
+    def test_serve_data_is_valid_tlt_list_(self):
         do_print = True
         my_name = self._testMethodName
         # noinspection PyPep8Naming
-        CUT = tlt.serve_data
-
-        _tlt_list = CUT()
-
+        CUT = tlt.serve_data()
         # list of tasklists
-        self.assertTrue(h.is_valid_tlt_list_(_tlt_list, do_print, my_name))
+        self.assertTrue(h.is_valid_tlt_list_(CUT, do_print, my_name))
 
     def test_update_shelve(self):
         do_print = False
         my_name = self._testMethodName
         # noinspection PyPep8Naming
-        CUT = tlt.update_shelve
+        CUT = tlt.update_shelve  # which calls serve_data() first.
 
-        _tlt_list = CUT()
-
-        # list of tasklists
-        self.assertTrue(h.is_valid_tlt_list_(_tlt_list, do_print, my_name), "exp valid list of tlt objects.")
+        shelved_tlt_list = CUT()
+        unshelved_tlt_list = h.unshelve_from_db()
+        self.assertDictEqual(unshelved_tlt_list, shelved_tlt_list,
+                             "exp unshelved and shelved are same")
 
     # noinspection PyPep8Naming
     def test_update_server_PILOTS(self):
