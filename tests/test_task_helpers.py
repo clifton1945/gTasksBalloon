@@ -19,8 +19,8 @@ class TestTaskHelpers(TestCase):
                                 if tl['tl_rsrc']['title'] == "PILOTS"]
         self.tlt_rsrc_pilots = self.tlt_list_pilots[0]
 
-    def test_print_tasks_in_t_list_in_(self):
+    def test_print_t_objs_in_t_list_in_pilots(self):
         # noinspection PyPep8Naming,PyPep8Naming
-        CUT = h.print_tasks_in_t_list_in_
+        CUT = h.print_t_objs_in_t_list_in_
         _tlt = self.tlt_rsrc_pilots
         CUT(_tlt)

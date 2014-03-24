@@ -82,16 +82,17 @@ def print_t_list_(tlt_obj, test_name=None):
         print "{}->\n  " \
             "t_obj list is {} long.". \
             format(test_name, l)
-        print_tasks_in_t_list_in_(tlt_obj)
+        print_t_objs_in_t_list_in_(tlt_obj)
 
 
-def print_tasks_in_t_list_in_(tlt_dict):
+def print_t_objs_in_t_list_in_(tlt_obj, test_name=None):
     """
-    :type tlt_dict: dict
+    prints abbreviated summary of all task
+    :type tlt_obj: dict
     """
-    template = " task:'{title}' {status}  "
-    for t_rsrc in tlt_dict['t_list']:
-        print template.format(**t_rsrc)
+    template = "{} task:'{title}' {status}  "
+    for t_rsrc in tlt_obj['t_list']:
+        print template.format(test_name, **t_rsrc)
     
     
 ###############   Data ############################
