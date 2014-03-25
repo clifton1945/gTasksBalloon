@@ -90,9 +90,11 @@ def print_t_objs_in_t_list_in_(tlt_obj, test_name=None):
     prints abbreviated summary of all task
     :type tlt_obj: dict
     """
-    template = "{} task:'{title}' {status}  "
+    template = "-> task[{status}]:'{title}' "
+
+    print "\n" + test_name
     for t_rsrc in tlt_obj['t_list']:
-        print template.format(test_name, **t_rsrc)
+        print template.format(**t_rsrc)
     
     
 ###############   Data ############################
