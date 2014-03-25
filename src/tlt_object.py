@@ -115,7 +115,7 @@ def update_data_(tlt_obj_list):
 
 def update_server(tlt_obj_list):
     # locals
-    list_of_rsps = []
+    t_rsp_list = []
     for tlt_obj in tlt_obj_list:
         for task_obj in tlt_obj['t_list']:
             #try
@@ -125,13 +125,9 @@ def update_server(tlt_obj_list):
                 task=task_obj['id'],
                 body=task_obj
                 ).execute()
-            list_of_rsps.append(rsp)
-
-    #rebuild tlt_obj_list now tlt_rsp_list
-    tl_list = [tlt_obj['tl_rsrc'] for tlt_obj in tlt_obj_list]
-    tlt_rsp_list = [{'tl_rsrc': tl_rsrc, 't_list': list_of_rsps}
-                    for tl_rsrc, t_list in zip(tl_list, list_of_rsps)]
-    return tlt_rsp_list
+            t_rsp_list.append(rsp)
+        task_obj['t_list'] = t_rsp_list
+    return tlt_obj_list
 
 
 # noinspection PyClassHasNoInit
@@ -190,9 +186,12 @@ class Rules():
             #PREDICATE
             if task_is_near_due:
                 if task_is_not_visible:
+                    t_obj['status'] = 'needsAction'
+                    t_obj.pop('completed')
                     need_to_modify_this = True
             else:  # task is NOT near_due
                 if task_is_visible:
+                    t_obj['status'] = 'completed'
                     need_to_modify_this = True
 
         return need_to_modify_this
