@@ -1,10 +1,10 @@
 import unittest
-# from datetime import datetime
-import src.tlt_object as tlt
+from datetime import datetime
+import src.tlt_object as model
 import src.task_helpers as h
 
 
-tlt_list = tlt.update_shelve(False)
+tlt_list = model.update_shelve(False)
 print '************* UPDATED SHELVE *********'
 
 
@@ -68,21 +68,6 @@ class ShelvedTltTests(unittest.TestCase):
         self.tlt_list = _tlt_list
         self.tlt_obj = tlt_obj
 
-    def test_data_valid(self):
-        """
-        checks tlt_list and tlt obj are valid
-        AND
-        confirms tlt_rsrc 0 != tlt_rsrc 1
-        """
-        # locals
-        do_print = False
-        msg = self._testMethodName
-
-        _tlt_list = self.tlt_list
-
-        # list of tasklists
-        h.is_valid_tlt_list_(_tlt_list, do_print, msg)
-
     #@unittest.skip("skip: test_update_data_()  till base is stable.")
     def test_update_data_(self):
         """
@@ -91,7 +76,7 @@ class ShelvedTltTests(unittest.TestCase):
 
         """
         # noinspection PyPep8Naming
-        CUT = tlt.update_data_
+        CUT = model.update_data_
         # locals
         do_print = False
         msg = self._testMethodName + ".ALL lists"
@@ -101,7 +86,7 @@ class ShelvedTltTests(unittest.TestCase):
 
         h.print_summary_ttl_list_(data, self._testMethodName + ".BASE")
 
-        mod = tlt.update_data_(data)    # MAIN PREDICATE
+        mod = model.update_data_(data)    # MAIN PREDICATE
         exp = CUT(mod)
 
         # as modified
@@ -127,7 +112,7 @@ class ServerTltTests(unittest.TestCase):
         do_print = False
         my_name = self._testMethodName
         # noinspection PyPep8Naming
-        CUT = tlt.serve_data()
+        CUT = model.serve_data()
         # list of tasklists
         self.assertTrue(h.is_valid_tlt_list_(CUT, do_print, my_name))
 
@@ -135,7 +120,7 @@ class ServerTltTests(unittest.TestCase):
         do_print = False
         my_name = self._testMethodName
         # noinspection PyPep8Naming
-        CUT = tlt.update_shelve  # which calls serve_data() first.
+        CUT = model.update_shelve  # which calls serve_data() first.
 
         shelved_tlt_list = CUT()
         unshelved_tlt_list = h.unshelve_from_db()
@@ -150,9 +135,9 @@ class ServerTltTests(unittest.TestCase):
         """
         updates SERVER.PILOTS Tasklist ONLY -
         """
-        CUT = tlt.update_data_
+        CUT = model.update_data_
         # locals
-        do_print = True  # TODO  RESET TO FALSE AFTER TESTING
+        do_print = False
         msg = self._testMethodName + ".PILOTS list."
         # data as received
         data = h.unshelve_from_db()
@@ -174,7 +159,7 @@ class ServerTltTests(unittest.TestCase):
         """
         updates SERVER.PILOTS Tasklist ONLY -
         """
-        CUT = tlt.update_server
+        CUT = model.update_server
         # locals
         # do_print = True
         msg = self._testMethodName + ".PILOTS list."
@@ -182,13 +167,22 @@ class ServerTltTests(unittest.TestCase):
         data = h.unshelve_from_db()
         data = [d for d in data
                 if d['tl_rsrc']['title'] == 'PILOTS']
-        a_tlt_obj = data[0] if data else None
+        a_tlt_obj = tlt = data[0] if data else None
+
+        # FORCE WRONG STATUS
+        t = [t for t in tlt['t_list'] if t['title'] == 'expect needsAction'].pop()
+        t['due'] == h.rfc_from_(datetime.now())
+        t['status'] = 'completed'
+
+        t = [t for t in tlt['t_list'] if t['title'] == 'expect completed'].pop()
+        t['due'] == h.rfc_from_(datetime(2000, 3, 2, 1))
+        t['status'] = 'needsAction'
 
         h.print_summary_ttl_list_(data, self._testMethodName + ".BASE")
         h.print_t_objs_in_t_list_in_(a_tlt_obj, msg)  # NOTE: ONE tlt+obj
 
         # FIRST modifiy the data if needed
-        mod = tlt.update_data_(data)
+        mod = model.update_data_(data)
         # NOW update_server()
         data = CUT(mod)
         a_tlt_obj = data[0] if data else None
@@ -202,18 +196,18 @@ class ServerTltTests(unittest.TestCase):
         updates SERVER after first updating_data() ALL DATA
         """
         # noinspection PyPep8Naming
-        CUT = tlt.update_server
+        CUT = model.update_server
         # locals
         do_print = False
         msg = self._testMethodName + ".ALL lists"
 
-        data = tlt.update_shelve() # data as received from server and shelved.
+        data = model.update_shelve() # data as received from server and shelved.
         a_tlt_obj = data[0] if data else None
         h.print_summary_ttl_list_(data, self._testMethodName + ".BASE")
         h.print_t_objs_in_t_list_in_(a_tlt_obj, msg)  # NOTE: ONE tlt+obj
 
         # FIRST modifiy the data if needed
-        mod = tlt.update_data_(data)
+        mod = model.update_data_(data)
         # NOW update_server()
         data = CUT(mod)
         a_tlt_obj = data[0] if data else None
