@@ -152,12 +152,13 @@ class Rules():
         # noinspection PyUnusedLocal
         modified_tasks_list = mt_l = []
         # PREDICATE
-        if len(tlt_obj['t_list']) > 0 :
+        assert 't_list' in tlt_obj  # always
+        if len(tlt_obj['t_list']) > 0:
             mt_l = [t_obj for t_obj in tlt_obj['t_list']
                     if Rules.need_to_modify_this_(t_obj)]
-        if len(mt_l):
+        if len(mt_l) > 0 :
             is_modified = True
-            tlt_obj['items'] = mt_l
+        tlt_obj['t_list'] = mt_l
         return is_modified
 
     @staticmethod
@@ -185,7 +186,7 @@ class Rules():
             # locals
             task_is_near_due = Rules.near_due_rule(t_obj)
             task_is_visible = (t_obj['status'] == 'needsAction') and 'completed' not in t_obj
-            task_is_not_visible = (t_obj['status'] == 'completed')
+            task_is_not_visible = not task_is_visible
             #PREDICATE
             if task_is_near_due:
                 if task_is_not_visible:

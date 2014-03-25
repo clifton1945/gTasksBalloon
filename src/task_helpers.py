@@ -92,9 +92,10 @@ def print_t_objs_in_t_list_in_(tlt_obj, test_name=None):
     """
     template = "-> task[{status}]:'{title}' "
 
-    print "\n" + test_name
+    print test_name
     for t_rsrc in tlt_obj['t_list']:
         print template.format(**t_rsrc)
+    print "\n"
     
     
 ###############   Data ############################
