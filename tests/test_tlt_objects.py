@@ -158,13 +158,13 @@ class ServerTltTests(unittest.TestCase):
         data = h.unshelve_from_db()
         data = [d for d in data
                 if d['tl_rsrc']['title'] == 'PILOTS']
-        a_tlt_obj = data[0]
+        a_tlt_obj = data[0] if data else None
 
         h.print_summary_ttl_list_(data, self._testMethodName + ".BASE")
         h.print_t_objs_in_t_list_in_(a_tlt_obj, msg)  # NOTE: ONE tlt+obj
 
         data = CUT(data)  # PREDICATE
-        a_tlt_obj = data[0]
+        a_tlt_obj = data[0] if data else None
 
         h.print_summary_ttl_list_(data, self._testMethodName + ".MODIFIED.")
         h.print_t_objs_in_t_list_in_(a_tlt_obj, msg)  # NOTE: ONE tlt+obj
@@ -182,7 +182,7 @@ class ServerTltTests(unittest.TestCase):
         data = h.unshelve_from_db()
         data = [d for d in data
                 if d['tl_rsrc']['title'] == 'PILOTS']
-        a_tlt_obj = data[0]
+        a_tlt_obj = data[0] if data else None
 
         h.print_summary_ttl_list_(data, self._testMethodName + ".BASE")
         h.print_t_objs_in_t_list_in_(a_tlt_obj, msg)  # NOTE: ONE tlt+obj
@@ -191,7 +191,7 @@ class ServerTltTests(unittest.TestCase):
         mod = tlt.update_data_(data)
         # NOW update_server()
         data = CUT(mod)
-        a_tlt_obj = data[0]
+        a_tlt_obj = data[0] if data else None
 
         h.print_summary_ttl_list_(data, self._testMethodName + ".MODIFIED")
         h.print_t_objs_in_t_list_in_(a_tlt_obj, msg)  # NOTE: ONE tlt+obj
@@ -208,7 +208,7 @@ class ServerTltTests(unittest.TestCase):
         msg = self._testMethodName + ".ALL lists"
 
         data = tlt.update_shelve() # data as received from server and shelved.
-        a_tlt_obj = data[0]
+        a_tlt_obj = data[0] if data else None
         h.print_summary_ttl_list_(data, self._testMethodName + ".BASE")
         h.print_t_objs_in_t_list_in_(a_tlt_obj, msg)  # NOTE: ONE tlt+obj
 
@@ -216,8 +216,7 @@ class ServerTltTests(unittest.TestCase):
         mod = tlt.update_data_(data)
         # NOW update_server()
         data = CUT(mod)
-        a_tlt_obj = data[0]
-
+        a_tlt_obj = data[0] if data else None
         h.print_summary_ttl_list_(data, self._testMethodName + ".MODIFIED")
         h.print_t_objs_in_t_list_in_(a_tlt_obj, msg)  # NOTE: ONE tlt+obj
 
