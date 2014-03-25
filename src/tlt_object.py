@@ -87,7 +87,7 @@ def serve_data():
 
 def update_shelve(do_print=False):
     """
-    selves new server data -> list of tlt objects.
+    shelves new server data -> list of tlt objects.
     @return: tlt_obj_list
     @rtype: list
     """
@@ -101,7 +101,7 @@ def update_shelve(do_print=False):
 
 def update_data_(tlt_obj_list):
     """
-     update_data() is the main PREDICATE of th project. Each tlt_object is subjected to a series of Rules.
+     update_data() is the main PREDICATE of the project. Each tlt_object is subjected to a series of Rules.
         If the rule dictates, the object is modifed, and returned to a modified_tlt_objs list.
 
      @param tlt_obj_list: list
@@ -187,7 +187,7 @@ class Rules():
             if task_is_near_due:
                 if task_is_not_visible:
                     t_obj['status'] = 'needsAction'
-                    t_obj.pop('completed')
+                    if 'completed' in t_obj: t_obj.pop('completed')
                     need_to_modify_this = True
             else:  # task is NOT near_due
                 if task_is_visible:
